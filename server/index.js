@@ -1,10 +1,14 @@
 const express = require("express")
 const app = express()
-
 const db = require("./models")
+app.set('view engine', 'ejs')
+app.use(express.json())
 
 const userRouter = require("./routesAndControllers/homeRoutes")
+const authRouter = require("./routesAndControllers/authRoutes")
+
 app.use("/home", userRouter)
+app.use("/auth", authRouter)
 
 app.use((err, req, res, next) => {
   console.log("Error middleware")
