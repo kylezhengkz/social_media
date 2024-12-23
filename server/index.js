@@ -1,8 +1,11 @@
 const express = require("express")
 const app = express()
+const cors = require("cors")
 const db = require("./models")
 app.set('view engine', 'ejs')
+
 app.use(express.json())
+app.use(cors())
 
 const userRouter = require("./routesAndControllers/homeRoutes")
 const authRouter = require("./routesAndControllers/authRoutes")
