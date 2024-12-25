@@ -1,23 +1,25 @@
 import { useForm } from "react-hook-form"
 import axios from "axios"
 
-function Register() {
+function Login() {
   const { register, formState: { errors }, handleSubmit } = useForm()
   const onSubmit = newUser => {
     console.log(newUser)
-      axios.post("http://localhost:3000/auth/register", newUser, { withCredentials: true }).then((res) => {
-        console.log(res.data.duplicateUsername)
-        if (res.data.duplicateUsername) {
-          window.alert(`Username "${newUser.username}" is taken`)
-        } else {
-          window.location = "/home"
-        }
+    axios.post("http://localhost:3000/auth/login", newUser, { withCredentials: true }).then((res) => {
+      console.log(res.data.invalidUsername)
+      if (res.data.invalidUsername) {
+        window.alert(`Username "${newUser.username}" cannot be found`)
+      } else if (res.data.invalidPassword) {
+        window.alert(`Username found but password is incorrect`)
+      } else {
+        window.location = "/home"
+      }
     })
   }
    
   return (
     <>
-      <h1>Register</h1>
+      <h1>Login</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input placeholder="Username" {...register("username", { required: "Required field", maxLength: {value: 30, message: "Password cannot exceed length 30"} })} />
         {<span>{errors.username?.message}</span>}
@@ -31,4 +33,4 @@ function Register() {
   )
 }
 
-export default Register
+export default Login

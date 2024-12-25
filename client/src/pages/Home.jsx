@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import axios from "axios"
 
 function Home() {
-
   const[listOfUsers, setListOfUsers] = useState([])
 
   useEffect(() => {
@@ -12,7 +11,7 @@ function Home() {
   }, [])
   return (
     <>
-      <h1>Hello world</h1>
+      <h1>Home</h1>
       <div>
         {listOfUsers.map((value, key) => {
           return <li key={key}>{JSON.stringify(value)}</li>
