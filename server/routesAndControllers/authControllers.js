@@ -4,8 +4,8 @@ const bcrypt = require('bcrypt')
 exports.getRegister = async(req, res, next) => {
   console.log("GET /auth/register")
   console.log(`Request session ID: ${req.sessionID}`)
-  req.session.dummy = "DUMMY"
   console.log(req.session)
+  console.log(req.cookies)
   try {
     const listOfUsers = await Users.findAll()
     res.json(listOfUsers)
@@ -106,8 +106,8 @@ exports.postLogin = async(req, res, next) => {
         return next(err)
       } else {
         console.log("Session saved properly")
-        console.log(req.session)
         console.log(`Request session ID: ${req.sessionID}`)
+        console.log(req.session)
         res.json({
           invalidUsername: false,
           invalidPassword: false
@@ -121,8 +121,8 @@ exports.postLogin = async(req, res, next) => {
 
 exports.postLogout = async(req, res, next) => {
   console.log("POST /auth/logout")
-  console.log(req.session.cookie)
   console.log(`Request session ID: ${req.sessionID}`)
+  console.log(req.session.cookie)
   req.session.destroy((err) => {
     if (err) {
       return next(err)

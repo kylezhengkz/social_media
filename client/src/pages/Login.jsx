@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form"
 import axios from "axios"
+axios.defaults.withCredentials = true
 
 function Login() {
   const { register, formState: { errors }, handleSubmit } = useForm()
   const onSubmit = newUser => {
     console.log(newUser)
-    axios.post("http://localhost:3000/auth/login", newUser, { withCredentials: true }).then((res) => {
+    axios.post("http://localhost:3000/auth/login", newUser).then((res) => {
       console.log(res.data.invalidUsername)
       if (res.data.invalidUsername) {
         window.alert(`Username "${newUser.username}" cannot be found`)

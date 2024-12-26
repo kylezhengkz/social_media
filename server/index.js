@@ -25,22 +25,21 @@ async function main() {
     checkExpirationInterval: 15 * 60 * 1000, // The interval at which to cleanup expired sessions in milliseconds.
     expiration: 24 * 60 * 60 * 1000
   });
-
+  const IN_PROD = process.env.NODE_ENV === 'production'
   app.use(
     session({
       secret: "keyboard cat",
       store: myStore,
       resave: false,
       saveUninitialized: false,
-      proxy: true,
       cookie: {
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        secure: false,
-        httpOnly: true,
+        sameSite: true,
+        secure: IN_PROD
       },
     })
   );
-  myStore.sync()
+  await myStore.sync()
 
   const userRouter = require("./routesAndControllers/homeRoutes")
   const authRouter = require("./routesAndControllers/authRoutes")
