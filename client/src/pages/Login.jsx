@@ -3,7 +3,7 @@ import axios from "axios"
 axios.defaults.withCredentials = true
 import { useNavigate } from 'react-router-dom'
 
-function Login() {
+function Login({ setAuth }) {
   const { register, formState: { errors }, handleSubmit } = useForm()
   const navigate = useNavigate()
   const onSubmit = newUser => {
@@ -15,6 +15,7 @@ function Login() {
       } else if (res.data.invalidPassword) {
         window.alert(`Username found but password is incorrect`)
       } else {
+        setAuth(true)
         navigate("/home")
       }
     })

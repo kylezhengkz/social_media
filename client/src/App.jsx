@@ -6,26 +6,39 @@ import Register from "./pages/Register"
 import Login from "./pages/Login"
 import Logout from "./pages/Logout"
 import DirectLogin from "./pages/DirectLogin"
+import { useState, useEffect } from "react"
+import axios from "axios"
 
 function App() {
+  const [isAuth, setAuth] = useState(false)
+  useEffect(() => {
+    async function conditionalRender() {
+      let checkAuth = await axios.get("http://localhost:3000/auth/checkAuth")
+
+      if (checkAuth.data.isAuth) {
+        axios.get("http://localhost:3000/auth/register").then((res) => {
+          setAuth(true)
+        })
+      }
+    }
+    conditionalRender()
+  }, [])
   return (
     <>
       <Router>
-        <Link to="/">Landing Page</Link>
-        <br/>
-        <Link to="/home">Home</Link>
-        <br/>
-        <Link to="/auth/register">Register</Link>
-        <br/>
-        <Link to="/auth/login">Login</Link>
-        <br/>
-        <Link to="/auth/logout">Logout</Link>
+        <div className="link-container">
+          <Link to="/">Landing Page</Link>
+          <Link to="/home">Home</Link>
+          <Link to="/auth/register">Register</Link>
+          <Link to="/auth/login">Login</Link>
+          {isAuth && <Link to="/auth/logout">Logout</Link>}
+        </div>
         <Routes>
           <Route path="/" element={<LandingPage/>}/>
           <Route path="/home" element={<Home/>}/>
-          <Route path="/auth/register" element={<Register/>}/>
-          <Route path="/auth/login" element={<Login/>}/>
-          <Route path="/auth/logout" element={<Logout/>}/>
+          <Route path="/auth/register" element={<Register setAuth={setAuth}/>}/>
+          <Route path="/auth/login" element={<Login setAuth={setAuth}/>}/>
+          <Route path="/auth/logout" element={<Logout setAuth={setAuth}/>}/>
           <Route path="/auth/directLogin" element={<DirectLogin/>}/>
         </Routes>
       </Router>
