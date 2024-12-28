@@ -41,10 +41,10 @@ async function main() {
   );
   await myStore.sync()
 
-  const userRouter = require("./routesAndControllers/homeRoutes")
+  const homeRouter = require("./routesAndControllers/homeRoutes")
   const authRouter = require("./routesAndControllers/authRoutes")
 
-  app.use("/home", userRouter)
+  app.use("/home", homeRouter)
   app.use("/auth", authRouter)
 
   app.use((err, req, res, next) => {
