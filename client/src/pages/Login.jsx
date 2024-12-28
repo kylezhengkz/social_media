@@ -25,7 +25,7 @@ function Login({ setAuth }) {
     <>
       <h1>Login</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input placeholder="Username" {...register("username", { required: "Required field", maxLength: {value: 30, message: "Password cannot exceed length 30"} })} />
+        <input placeholder="Username" {...register("username", { required: "Required field", maxLength: {value: 30, message: "Username cannot exceed character length 30"} })} />
         {<span>{errors.username?.message}</span>}
         <br></br>
         <input placeholder="Password" {...register("password", { required: "Required field" })} />

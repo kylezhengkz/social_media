@@ -43,9 +43,11 @@ async function main() {
 
   const homeRouter = require("./routesAndControllers/homeRoutes")
   const authRouter = require("./routesAndControllers/authRoutes")
+  const postRouter = require("./routesAndControllers/postRoutes")
 
   app.use("/home", homeRouter)
   app.use("/auth", authRouter)
+  app.use("/post", postRouter)
 
   app.use((err, req, res, next) => {
     console.log("Error middleware")
