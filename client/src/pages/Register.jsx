@@ -1,17 +1,21 @@
 import { useForm } from "react-hook-form"
 import axios from "axios"
 axios.defaults.withCredentials = true
+import { useNavigate } from 'react-router-dom'
 
 function Register() {
   const { register, formState: { errors }, handleSubmit } = useForm()
+  const navigate = useNavigate()
   const onSubmit = newUser => {
     console.log(newUser)
-      axios.post("http://localhost:3000/auth/register", newUser,).then((res) => {
+      axios.post("http://localhost:3000/auth/register", newUser).then((res) => {
         console.log(res.data.duplicateUsername)
         if (res.data.duplicateUsername) {
           window.alert(`Username "${newUser.username}" is taken`)
         } else {
-          window.location = "/home"
+          axios.post("http://localhost:3000/auth/login", newUser).then((res) => {
+            navigate('/home')
+          })
         }
     })
   }

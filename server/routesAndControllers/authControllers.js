@@ -1,11 +1,23 @@
 const { Users } = require("../models")
 const bcrypt = require('bcrypt')
 
+exports.getCheckAuth = async(req, res, next) => {
+  console.log("GET /auth/checkAuth")
+  console.log(`Request session ID: ${req.sessionID}`)
+  console.log(req.session)
+  if (req.session.userId) {
+    console.log("User authenticated")
+    res.json({isAuth: true})
+  } else {
+    console.log("User not authenticated")
+    res.json({isAuth: false})
+  }
+}
+
 exports.getRegister = async(req, res, next) => {
   console.log("GET /auth/register")
   console.log(`Request session ID: ${req.sessionID}`)
   console.log(req.session)
-  console.log(req.cookies)
   try {
     const listOfUsers = await Users.findAll()
     res.json(listOfUsers)
@@ -122,7 +134,7 @@ exports.postLogin = async(req, res, next) => {
 exports.postLogout = async(req, res, next) => {
   console.log("POST /auth/logout")
   console.log(`Request session ID: ${req.sessionID}`)
-  console.log(req.session.cookie)
+  console.log(req.session)
   req.session.destroy((err) => {
     if (err) {
       return next(err)

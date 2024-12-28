@@ -5,6 +5,7 @@ import Home from "./pages/Home"
 import Register from "./pages/Register"
 import Login from "./pages/Login"
 import Logout from "./pages/Logout"
+import DirectLogin from "./pages/DirectLogin"
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/auth/register" element={<Register/>}/>
           <Route path="/auth/login" element={<Login/>}/>
           <Route path="/auth/logout" element={<Logout/>}/>
+          <Route path="/auth/directLogin" element={<DirectLogin/>}/>
         </Routes>
       </Router>
     </>

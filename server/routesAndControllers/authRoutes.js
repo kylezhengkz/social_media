@@ -12,4 +12,7 @@ router.route("/login")
 router.route("/logout")
   .post(authControllers.postLogout)
 
+router.route("/checkAuth")
+  .get(authControllers.getCheckAuth)
+
 module.exports = router
