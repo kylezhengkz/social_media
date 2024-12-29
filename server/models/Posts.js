@@ -7,6 +7,11 @@ module.exports = (sequelize, DataTypes) => {
     postBody: {
       type: DataTypes.STRING(2200),
       allowNull: false
+    },
+    likes: {
+      type: JSON,
+      defaultValue: {},
+      allowNull: false
     }
   })
 
