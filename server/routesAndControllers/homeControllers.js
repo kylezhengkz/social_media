@@ -1,4 +1,6 @@
+const { Posts } = require("../models")
 exports.getHome = async(req, res) => {
   console.log("GET /home")
-  res.send("Hello world!")
+  const posts = await Posts.findAll()
+  res.json(posts)
 }

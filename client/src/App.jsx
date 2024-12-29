@@ -7,6 +7,7 @@ import Login from "./pages/Login"
 import Logout from "./pages/Logout"
 import DirectLogin from "./pages/DirectLogin"
 import CreatePost from "./pages/CreatePost"
+import Browse from "./pages/Browse"
 import { useState, useEffect } from "react"
 import axios from "axios"
 
@@ -30,6 +31,7 @@ function App() {
         <div className="link-container">
           <Link to="/">Landing Page</Link>
           <Link to="/home">Home</Link>
+          <Link to="/home/browse">Browse</Link>
           <Link to="/auth/register">Register</Link>
           <Link to="/auth/login">Login</Link>
           {isAuth && <Link to="/auth/logout">Logout</Link>}
@@ -43,6 +45,7 @@ function App() {
           <Route path="/auth/logout" element={<Logout setAuth={setAuth}/>}/>
           <Route path="/auth/directLogin" element={<DirectLogin/>}/>
           <Route path="/post/createPost" element={<CreatePost/>}/>
+          <Route path="/home/browse" element={<Browse/>}/>
         </Routes>
       </Router>
     </>

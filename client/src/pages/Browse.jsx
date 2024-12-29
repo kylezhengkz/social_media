@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
 
-function Home() {
-  const[listOfUsers, setListOfUsers] = useState([])
+function Browse() {
+  const[listOfPosts, setListOfPosts] = useState([])
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -11,21 +11,21 @@ function Home() {
       let checkAuth = await axios.get("http://localhost:3000/auth/checkAuth")
 
       if (checkAuth.data.isAuth) {
-        axios.get("http://localhost:3000/auth/register").then((res) => {
-          setListOfUsers(res.data)
+        axios.get("http://localhost:3000/home/browse").then((res) => {
+          setListOfPosts(res.data)
         })
       } else {
         console.log("User not authenticated");
-        navigate('/auth/directLogin', { state: { pageName: '/home' } })
+        navigate('/auth/directLogin', { state: { pageName: '/home/browse' } })
       }
     }
     conditionalRender()
   }, [navigate])
   return (
     <>
-      <h1>Home</h1>
+      <h1>Browse</h1>
       <div>
-        {listOfUsers.map((value, key) => {
+        {listOfPosts.map((value, key) => {
           return <li key={key}>{JSON.stringify(value)}</li>
         })}
       </div>
@@ -33,4 +33,4 @@ function Home() {
   )
 }
 
-export default Home
+export default Browse
