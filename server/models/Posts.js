@@ -8,12 +8,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(2200),
       allowNull: false
     },
-    likes: {
+    votes: {
       type: JSON,
-      defaultValue: {},
+      defaultValue: {likes: [], dislikes: []},
       allowNull: false
     }
-  })
+   })
 
   return Posts
 }
