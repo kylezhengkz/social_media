@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Posts = sequelize.define("Posts", {
+  const Post = sequelize.define("Posts", {
     postTitle: {
       type: DataTypes.STRING(100),
       allowNull: false
@@ -8,12 +8,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(2200),
       allowNull: false
     },
-    votes: {
-      type: JSON,
-      defaultValue: {likes: [], dislikes: []},
+    userId: {
+      type: DataTypes.INTEGER,
       allowNull: false
-    }
-   })
-
-  return Posts
+    },
+  }, {
+    indexes: [
+      {
+        unique: false,
+        fields: ["userId"]
+      }
+    ]
+  })
+  return Post
 }

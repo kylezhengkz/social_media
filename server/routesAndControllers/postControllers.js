@@ -1,4 +1,4 @@
-const { Posts } = require("../models")
+const { Post } = require("../models")
 var Sequelize = require("sequelize")
 
 function getDateStr() {
@@ -27,11 +27,11 @@ exports.createPost = async(req, res, next) => {
     entry = {
       "postTitle":postTitle,
       "postBody":postBody,
-      "UserId":userId,
+      "userId":userId,
       "createdAt":date,
       "updatedAt":date
     }
-    await Posts.create(entry)
+    await Post.create(entry)
     res.sendStatus(200)
   } catch (err) {
     next(err)
@@ -42,7 +42,7 @@ exports.getPost = async(req, res, next) => {
   try {
     console.log("GET /post/:id")
     id = req.params.id
-    const findPost = await Posts.findOne({
+    const findPost = await Post.findOne({
       where: {
         id: id
       }
@@ -55,7 +55,7 @@ exports.getPost = async(req, res, next) => {
 }
 
 async function addVote(id, userIdJson) {
-  await Posts.update(
+  await Post.update(
     {
       votes: Sequelize.fn("JSON_MERGE_PRESERVE", 
         Sequelize.col("votes"), 
@@ -73,13 +73,13 @@ exports.likePost = async(req, res, next) => {
     userId = req.params.userId
     console.log(id)
     console.log(userId)
-    let findPost = await Posts.findOne({ // set back to const later
+    let findPost = await Post.findOne({ // set back to const later
       where: {
         id: id
       }
     })
 
-    const findUser = await Posts.findOne({
+    const findUser = await Post.findOne({
       where: {
         userId: userId
       }
@@ -92,7 +92,7 @@ exports.likePost = async(req, res, next) => {
     await addVote(id, {"likes": [userId]})
 
     // debugging purposes
-    findPost = await Posts.findOne({
+    findPost = await Post.findOne({
       where: {
         id: id
       }

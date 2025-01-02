@@ -1,4 +1,4 @@
-const { Users } = require("../models")
+const { User } = require("../models")
 const bcrypt = require('bcrypt')
 
 exports.getCheckAuth = async(req, res, next) => {
@@ -19,8 +19,8 @@ exports.getRegister = async(req, res, next) => {
   console.log(`Request session ID: ${req.sessionID}`)
   console.log(req.session)
   try {
-    const listOfUsers = await Users.findAll()
-    res.json(listOfUsers)
+    const listOfUser = await User.findAll()
+    res.json(listOfUser)
   } catch (err) {
     next(err)
   }
@@ -42,7 +42,7 @@ exports.postRegister = async(req, res, next) => {
     console.log(username)
     console.log(password)
 
-    const findUsername = await Users.findOne({
+    const findUsername = await User.findOne({
       where: {
         username: username
       }
@@ -69,7 +69,7 @@ exports.postRegister = async(req, res, next) => {
       "updatedAt":date
     }
     console.log(entry)
-    await Users.create(entry)
+    await User.create(entry)
 
     res.json({
       duplicateUsername: false
@@ -87,7 +87,7 @@ exports.postLogin = async(req, res, next) => {
     console.log(username)
     console.log(password)
 
-    const findUsername = await Users.findOne({
+    const findUsername = await User.findOne({
       where: {
         username: username
       }
