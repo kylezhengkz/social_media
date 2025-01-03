@@ -81,6 +81,8 @@ exports.didUserLikePost = async(req, res, next) => {
     userId = req.session.userId
     console.log(id)
     console.log(userId)
+    console.log(req.session)
+    console.log(req.sessionID)
     
     const findUserPostLike = await Like.findOne({
       where: {

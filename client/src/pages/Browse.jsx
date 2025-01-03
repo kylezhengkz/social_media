@@ -43,13 +43,18 @@ function Browse() {
   }, [navigate])
 
   useEffect(() => {
-    console.log(listOfPosts)
-    let likeStatusesJson = {}
-    for (const post of listOfPosts) {
-      console.log(post.id)
-      likeStatusesJson[post.id] = false
+    async function setInitialLike() {
+      console.log(listOfPosts)
+      let likeStatusesJson = {}
+      for (const post of listOfPosts) {
+        const didUserLikePost = await axios.get(`http://localhost:3000/post/${post.id}/didUserLikePost`)
+        likeStatusesJson[post.id] = didUserLikePost.data
+        console.log(post.id)
+        console.log(didUserLikePost.data)
+      }
+      setLikeStatuses(likeStatusesJson)
     }
-    setLikeStatuses(likeStatusesJson)
+    setInitialLike()
   }, [listOfPosts])
 
   // just printing
