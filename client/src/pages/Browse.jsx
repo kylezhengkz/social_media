@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
 import "./Browse.css"
@@ -7,12 +7,16 @@ function Browse() {
   const[listOfPosts, setListOfPosts] = useState([])
   const[likeStatuses, setLikeStatuses] = useState({})
   const navigate = useNavigate()
+  const renderCount = useRef(0)
 
   const likePost = async (postId) => {
     await axios.post(`http://localhost:3000/post/${postId}/likePost`)
     setLikeStatuses({
       ...likeStatuses,
       [postId]: true
+    })
+    axios.get("http://localhost:3000/home/browse").then(async (res) => {
+      setListOfPosts(res.data)
     })
     console.log(`Like post with id ${postId}`)
   }
@@ -22,6 +26,9 @@ function Browse() {
     setLikeStatuses({
       ...likeStatuses,
       [postId]: false
+    })
+    axios.get("http://localhost:3000/home/browse").then(async (res) => {
+      setListOfPosts(res.data)
     })
     console.log(`Unlike post with id ${postId}`)
   }
