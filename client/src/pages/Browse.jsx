@@ -7,7 +7,6 @@ function Browse() {
   const[listOfPosts, setListOfPosts] = useState([])
   const[likeStatuses, setLikeStatuses] = useState({})
   const navigate = useNavigate()
-  const renderCount = useRef(0)
 
   const likePost = async (postId) => {
     await axios.post(`http://localhost:3000/post/${postId}/likePost`)

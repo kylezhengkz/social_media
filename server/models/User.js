@@ -31,5 +31,12 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "userId"
     })
   }
+
+  User.associate = (models) => {
+    User.hasMany(models.Comment, {
+      onDelete: "cascade",
+      foreignKey: "userId"
+    })
+  }
   return User
 }

@@ -14,6 +14,14 @@ module.exports = (sequelize, DataTypes) => {
       {
         unique: true,
         fields: ["postId", "userId"]
+      },
+      {
+        unique: false,
+        fields: ["postId"]
+      },
+      {
+        unique: false,
+        fields: ["userId"]
       }
     ]
   })

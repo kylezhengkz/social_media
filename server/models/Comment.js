@@ -8,7 +8,23 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     }
-   })
+   }, {
+    indexes: [
+      {
+        unique: true,
+        fields: ["postId", "userId"]
+      },
+      {
+        unique: false,
+        fields: ["postId"]
+      },
+      {
+        unique: false,
+        fields: ["userId"]
+      }
+    ]
+   }
+  )
 
   return Comment
 }
