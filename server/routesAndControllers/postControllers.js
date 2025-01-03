@@ -1,5 +1,6 @@
 const { Post } = require("../models")
 const { Like } = require("../models")
+const { Comment } = require("../models")
 
 function getDateStr() {
   let d = new Date()
@@ -32,6 +33,33 @@ exports.createPost = async(req, res, next) => {
       "updatedAt":date
     }
     await Post.create(entry)
+    res.sendStatus(200)
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.deletePost = async(req, res, next) => {
+  try {
+    console.log("POST /post/delete/:id")
+    userId = req.session.userId
+    if (!userId) {
+      throw new Error("Attempted to create post without being authenticated")
+    }
+    console.log(userId)
+
+    id = req.params.id
+    const findPost = await Post.findOne({
+      where: {
+        id: id
+      }
+    })
+
+    if (!findPost) {
+      throw new Error("Attempted to delete a post that doesn't exist")
+    }
+
+    await findPost.destroy()
     res.sendStatus(200)
   } catch (err) {
     next(err)
@@ -155,6 +183,49 @@ exports.unlikePost = async(req, res, next) => {
       throw new Error("User never liked the post to begin with")
     }
     await findUserPostLike.destroy()
+    res.sendStatus(200)
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.totalComment = async(req, res, next) => {
+  try {
+    console.log("GET /post/:id/totalComment")
+    id = req.params.id
+    console.log(id)
+    
+    const allComments = await Comment.findAll({
+      where: {
+        postId: id
+      }
+    })
+
+    totalComments = Object.keys(allComments).length
+    console.log(`Total comments: ${totalComments}`)
+    res.send(`${totalComments}`)
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.addComment = async(req, res, next) => {
+  try {
+    console.log("POST /post/:id/addComment")
+
+    const { comment } = req.body
+    id = req.params.id
+    userId = req.session.userId
+    console.log(id)
+    console.log(userId)
+
+    entry = {
+      "postId":id,
+      "userId":userId,
+      "comment":comment
+    }
+
+    await Comment.create(entry)
     res.sendStatus(200)
   } catch (err) {
     next(err)

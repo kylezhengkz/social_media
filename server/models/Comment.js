@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     postId: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    comment: {
+      type: DataTypes.STRING(2200),
+      allowNull: false
     }
    }, {
     indexes: [

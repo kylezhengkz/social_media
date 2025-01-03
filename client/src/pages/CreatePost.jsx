@@ -9,7 +9,7 @@ function CreatePost() {
   const onSubmit = newPost => {
     console.log(newPost)
     axios.post("http://localhost:3000/post/create", newPost).then(() =>
-      navigate("/browse")
+      navigate("/home/browse")
     )
   }
   return (

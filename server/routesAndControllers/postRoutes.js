@@ -5,6 +5,9 @@ const postControllers = require("./postControllers")
 router.route("/create")
   .post(postControllers.createPost)
 
+router.route("/delete")
+  .post(postControllers.deletePost)
+
 router.route("/:id")
   .get(postControllers.getPost)
 
@@ -19,5 +22,11 @@ router.route("/:id/likePost")
 
 router.route("/:id/unlikePost")
   .post(postControllers.unlikePost)
+
+router.route("/:id/totalComment")
+  .get(postControllers.totalComment)
+
+router.route("/:id/addComment")
+  .post(postControllers.addComment)
 
 module.exports = router
