@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Like = sequelize.define("Likes", {
+  const Comment = sequelize.define("Comment", {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -10,5 +10,5 @@ module.exports = (sequelize, DataTypes) => {
     }
    })
 
-  return Like
+  return Comment
 }

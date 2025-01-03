@@ -8,16 +8,13 @@ router.route("/create")
 router.route("/:id")
   .get(postControllers.getPost)
 
-router.route("/:id/likePost/:userId")
+router.route("/:id/didUserLikePost")
+  .get(postControllers.didUserLikePost)
+
+router.route("/:id/likePost")
   .post(postControllers.likePost)
 
-// router.route("/:id/unlikePost/:userId")
-//   .post(postControllers.unlikePost)
-
-// router.route("/:id/dislikePost/:userId")
-//   .post(postControllers.dislikePost)
-
-// router.route("/:id/undislikePost/:userId")
-//   .post(postControllers.undislikePost)
+router.route("/:id/unlikePost")
+  .post(postControllers.unlikePost)
 
 module.exports = router

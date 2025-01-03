@@ -1,12 +1,16 @@
 import { useForm } from "react-hook-form"
 import axios from "axios"
 axios.defaults.withCredentials = true
+import { useNavigate } from 'react-router-dom'
 
 function CreatePost() {
   const { register, formState: { errors }, handleSubmit } = useForm()
+  const navigate = useNavigate()
   const onSubmit = newPost => {
     console.log(newPost)
-    axios.post("http://localhost:3000/post/create", newPost)
+    axios.post("http://localhost:3000/post/create", newPost).then(() =>
+      navigate("/browse")
+    )
   }
   return (
     <>

@@ -8,7 +8,8 @@ function Browse() {
   const[likeStatuses, setLikeStatuses] = useState({})
   const navigate = useNavigate()
 
-  const likePost = (postId) => {
+  const likePost = async (postId) => {
+    await axios.post(`http://localhost:3000/post/${postId}/likePost`)
     setLikeStatuses({
       ...likeStatuses,
       [postId]: true
@@ -16,7 +17,8 @@ function Browse() {
     console.log(`Like post with id ${postId}`)
   }
 
-  const unlikePost = (postId) => {
+  const unlikePost = async (postId) => {
+    await axios.post(`http://localhost:3000/post/${postId}/unlikePost`)
     setLikeStatuses({
       ...likeStatuses,
       [postId]: false

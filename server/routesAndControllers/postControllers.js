@@ -1,5 +1,5 @@
 const { Post } = require("../models")
-var Sequelize = require("sequelize")
+const { Like } = require("../models")
 
 function getDateStr() {
   let d = new Date()
@@ -54,52 +54,86 @@ exports.getPost = async(req, res, next) => {
   }
 }
 
-async function addVote(id, userIdJson) {
-  await Post.update(
-    {
-      votes: Sequelize.fn("JSON_MERGE_PRESERVE", 
-        Sequelize.col("votes"), 
-        Sequelize.literal(`'${JSON.stringify(userIdJson)}'`)
-      ),
-    },
-    { where: { id: id } },
-  )
+exports.didUserLikePost = async(req, res, next) => {
+  try {
+    console.log("GET /post/:id/didUserLikePost")
+    id = req.params.id
+    userId = req.session.userId
+    console.log(id)
+    console.log(userId)
+    
+    const findUserPostLike = await Like.findOne({
+      where: {
+        userId: userId,
+        postId: id
+      }
+    })
+
+    userLikedPost = false
+
+    if (findUserPostLike) {
+      console.log("User already liked the post")
+      userLikedPost = true
+    }
+    res.send(userLikedPost)
+  } catch (err) {
+    next(err)
+  }
 }
 
 exports.likePost = async(req, res, next) => {
   try {
-    console.log("POST /post/:id/likePost/:userId")
+    console.log("POST /post/:id/likePost")
     id = req.params.id
-    userId = req.params.userId
+    userId = req.session.userId
     console.log(id)
     console.log(userId)
-    let findPost = await Post.findOne({ // set back to const later
+    
+    const findUserPostLike = await Like.findOne({
       where: {
-        id: id
+        userId: userId,
+        postId: id
       }
     })
 
-    const findUser = await Post.findOne({
-      where: {
-        userId: userId
-      }
-    })
-    if (findUser) {
+    if (findUserPostLike) {
       console.log("User already liked the post")
       throw new Error("User already liked the post")
     }
 
-    await addVote(id, {"likes": [userId]})
+    entry = {
+      "postId":id,
+      "userId":userId
+    }
 
-    // debugging purposes
-    findPost = await Post.findOne({
+    await Like.create(entry)
+    res.sendStatus(200)
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.unlikePost = async(req, res, next) => {
+  try {
+    console.log("POST /post/:id/unlikePost")
+    id = req.params.id
+    userId = req.session.userId
+    console.log(id)
+    console.log(userId)
+    
+    const findUserPostLike = await Like.findOne({
       where: {
-        id: id
+        userId: userId,
+        postId: id
       }
     })
 
-    console.log(findPost.votes)
-    res.send(findPost.votes)
+    if (!findUserPostLike) {
+      console.log("User never liked the post to begin with")
+      throw new Error("User never liked the post to begin with")
+    }
+    await findUserPostLike.destroy()
+    res.sendStatus(200)
   } catch (err) {
     next(err)
   }
