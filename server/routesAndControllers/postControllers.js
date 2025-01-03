@@ -54,6 +54,26 @@ exports.getPost = async(req, res, next) => {
   }
 }
 
+exports.totalLikes = async(req, res, next) => {
+  try {
+    console.log("GET /post/:id/totalLikes")
+    id = req.params.id
+    console.log(id)
+    
+    const allLikes = await Like.findAll({
+      where: {
+        postId: id
+      }
+    })
+
+    totalLikes = Object.keys(allLikes).length
+    console.log(`Total likes: ${totalLikes}`)
+    res.send(`${totalLikes}`)
+  } catch (err) {
+    next(err)
+  }
+}
+
 exports.didUserLikePost = async(req, res, next) => {
   try {
     console.log("GET /post/:id/didUserLikePost")

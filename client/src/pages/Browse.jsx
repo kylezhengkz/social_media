@@ -17,7 +17,7 @@ function Browse() {
     console.log(`Like post with id ${postId}`)
   }
 
-  const unlikePost = async (postId) => {
+  const unlikePost = async (postId) => {-
     await axios.post(`http://localhost:3000/post/${postId}/unlikePost`)
     setLikeStatuses({
       ...likeStatuses,

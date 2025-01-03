@@ -8,6 +8,9 @@ router.route("/create")
 router.route("/:id")
   .get(postControllers.getPost)
 
+router.route("/:id/totalLikes")
+  .get(postControllers.totalLikes)
+
 router.route("/:id/didUserLikePost")
   .get(postControllers.didUserLikePost)
 
