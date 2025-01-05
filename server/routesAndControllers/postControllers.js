@@ -242,7 +242,8 @@ exports.getComments = async(req, res, next) => {
         postId: id
       }
     })
-    res.sendJson(allComments)
+    console.log(JSON.stringify(allComments))
+    res.json(allComments)
   } catch (err) {
     next(err)
   }

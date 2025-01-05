@@ -18,7 +18,7 @@ function Browse() {
       ...likeStatuses,
       [postId]: true
     })
-    axios.get("http://localhost:3000/home/browse").then(async (res) => {
+    axios.get("http://localhost:3000/home/browse").then((res) => {
       setListOfPosts(res.data)
     })
     console.log(`Like post with id ${postId}`)
@@ -30,7 +30,7 @@ function Browse() {
       ...likeStatuses,
       [postId]: false
     })
-    axios.get("http://localhost:3000/home/browse").then(async (res) => {
+    axios.get("http://localhost:3000/home/browse").then((res) => {
       setListOfPosts(res.data)
     })
     console.log(`Unlike post with id ${postId}`)
@@ -41,7 +41,7 @@ function Browse() {
       let checkAuth = await axios.get("http://localhost:3000/auth/checkAuth")
 
       if (checkAuth.data.isAuth) {
-        axios.get("http://localhost:3000/home/browse").then(async (res) => {
+        axios.get("http://localhost:3000/home/browse").then((res) => {
           setListOfPosts(res.data)
         })
       } else {
@@ -101,16 +101,18 @@ function Browse() {
         ...viewCommentStatuses,
         [postId]: false
       })
-
-      axios.get(`http://localhost:3000/post/${postId}/getComments`).then(async (res) => {
-        setComments({
-          ...comments,
-          [postId]: res.data
-        })
-      })
       return
     }
     console.log(`Open comment form for post id ${postId}`)
+    await axios.get(`http://localhost:3000/post/${postId}/getComments`).then((res) => {
+      console.log(`Setting comments: ${JSON.stringify(res.data)}`)
+      setComments({
+        ...comments,
+        [postId]: res.data
+      })
+      console.log(postId)
+      console.log(`See comments: ${JSON.stringify(comments[postId])}`)
+    })
     setViewCommentStatuses({
       ...viewCommentStatuses,
       [postId]: true
@@ -165,12 +167,10 @@ function Browse() {
               {!viewCommentStatuses[value.id] && <button type="button" onClick={() => toggleViewComments(value.id)}>View comments</button>}
               {viewCommentStatuses[value.id] && <button type="button" onClick={() => toggleViewComments(value.id)}>Hide comments</button>}
               
-              {viewCommentStatuses[value.id] &&
-                <ul>
-                  <li>Apple</li>
-                  <li>Apple</li>
-                  <li>Apple</li>
-                </ul>
+              {viewCommentStatuses[value.id] && comments[value.id] && 
+                comments[value.id].map((comment) => {
+                  return <p>{JSON.stringify(comment)}</p>
+                })
               }
             </div>
           )
