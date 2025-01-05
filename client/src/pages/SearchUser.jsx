@@ -49,7 +49,7 @@ function SearchUser() {
   }
 
   function browseUserPosts() {
-    navigate('/home/browse/user', { state: { "userPosts": {"username": username}} })
+    navigate(`/home/browse/${username}`, { state: { "userPosts": {"username": username}} })
   }
 
   return (

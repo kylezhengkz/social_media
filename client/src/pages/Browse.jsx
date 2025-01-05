@@ -191,7 +191,8 @@ function Browse() {
   return (
     <>
       <p>{renderCount.current}</p>
-      <h1>Browse</h1>
+      {userPosts && <h1>{userPosts["username"]}'s Posts </h1>}
+      {!userPosts && <h1>Browse</h1>}
       <div>
         {listOfPosts.map((value) => {
           return (
