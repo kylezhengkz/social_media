@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
 import "./Browse.css"
+import { useLocation } from 'react-router-dom'
 
 function Browse() {
   const[listOfPosts, setListOfPosts] = useState([])
@@ -15,6 +16,13 @@ function Browse() {
   const[likeCounts, setLikeCounts] = useState({})
   const[commentCounts, setCommentCounts] = useState({})
   const navigate = useNavigate()
+
+  const location = useLocation()
+  const { userPosts, userLikedPosts, userComments } = location.state || {}
+
+  console.log(`userPosts: ${JSON.stringify(userPosts)}`)
+  console.log(`userLikedPosts: ${userLikedPosts}`)
+  console.log(`userComments: ${userComments}`)
 
   const likePost = async (postId) => {
     await axios.post(`http://localhost:3000/post/${postId}/likePost`)
@@ -47,9 +55,23 @@ function Browse() {
       let checkAuth = await axios.get("http://localhost:3000/auth/checkAuth")
 
       if (checkAuth.data.isAuth) {
-        axios.get("http://localhost:3000/home/browse").then((res) => {
-          setListOfPosts(res.data)
-        })
+        if (userPosts) {
+          axios.get(`http://localhost:3000/profile/viewUserPosts/${userPosts["username"]}`).then((res) => {
+            setListOfPosts(res.data)
+          })
+        } else if (userLikedPosts) {
+          axios.get("http://localhost:3000/home/browse").then((res) => {
+            setListOfPosts(res.data)
+          })
+        } else if (userComments) {
+          axios.get("http://localhost:3000/home/browse").then((res) => {
+            setListOfPosts(res.data)
+          })
+        } else {
+          axios.get("http://localhost:3000/home/browse").then((res) => {
+            setListOfPosts(res.data)
+          })
+        }
       } else {
         console.log("User not authenticated");
         navigate('/auth/directLogin', { state: { pageName: '/home/browse' } })
@@ -198,11 +220,6 @@ function Browse() {
                 const element = document.getElementById(value.id)
                 console.log(element.value)
                 axios.post(`http://localhost:3000/post/${value.id}/addComment`, {"comment":element.value})
-                // axios.post(`http://localhost:3000/post/${newComment.postId}/addComment`, newComment).then(() =>
-                //   axios.get("http://localhost:3000/home/browse").then(async (res) => {
-                //     setListOfPosts(res.data)
-                //   })
-                // )
                 setCommentStatuses({
                   ...commentStatuses,
                   [value.id]: false

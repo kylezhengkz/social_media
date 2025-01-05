@@ -85,3 +85,84 @@ exports.queryProfile = async(req, res, next) => {
     next(err)
   }
 }
+
+exports.viewUserPosts = async(req, res, next) => {
+  try {
+    console.log("GET /profile/viewUserPosts/:username")
+
+    const user = await User.findOne({
+      where: {
+        username: username
+      }
+    })
+
+    if (!user) {
+      throw new Error("Attempted to browse from a user that doesn't exist")
+    }
+
+    const findPosts = await Post.findAll({
+      where: {
+        userId: user.id
+      }
+    })
+    res.json(findPosts)
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.viewUserLikedPosts = async(req, res, next) => {
+  try {
+    console.log("GET /profile/viewUserLikedPosts")
+    
+    const user = await User.findOne({
+      where: {
+        username: username
+      }
+    })
+
+    if (!user) {
+      throw new Error("Attempted to browse from a user that doesn't exist")
+    }
+
+    userId = req.session.userId
+
+    const findLikes = await Like.findAll({
+      where: {
+        userId: user.id
+      }
+    })
+
+    
+
+    res.json(findPostsILiked)
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.viewUserCommentedPosts = async(req, res, next) => {
+  try {
+    console.log("GET /profile/viewUserCommentedPosts")
+
+    const user = await User.findOne({
+      where: {
+        username: username
+      }
+    })
+
+    if (!user) {
+      throw new Error("Attempted to browse from a user that doesn't exist")
+    }
+
+    userId = req.session.userId
+    const findComments = await Comment.findAll({
+      where: {
+        userId: userId
+      }
+    })
+    res.json(findComments)
+  } catch (err) {
+    next(err)
+  }
+}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
+import "./SearchUser.css"
 
 function SearchUser() {
   const[usernameNotFound, setUsernameNotFound] = useState(true)
@@ -47,6 +48,10 @@ function SearchUser() {
     console.log(`Result: ${JSON.stringify(findUsername.data)}`)
   }
 
+  function browseUserPosts() {
+    navigate('/home/browse/user', { state: { "userPosts": {"username": username}} })
+  }
+
   return (
     <>
       <h1>Search User</h1>
@@ -60,15 +65,17 @@ function SearchUser() {
       {!usernameNotFound &&
         <>
           <h1>{username}'s Profile</h1>
-
-          <h1>Posts</h1>
+          <div className="flex-container">
+            <h1>Posts</h1>
+            <button onClick={browseUserPosts}>Browse</button>
+          </div>
           <div>
             {userPosts.map((value, key) => {
               return <li key={key}>{JSON.stringify(value)}</li>
             })}
           </div>
 
-          <h1>Likd Posts</h1>
+          <h1>Liked Posts</h1>
           <div>
             {likedPosts.map((value, key) => {
               return <li key={key}>{JSON.stringify(value)}</li>

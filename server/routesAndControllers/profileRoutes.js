@@ -14,4 +14,7 @@ router.route("/viewMyComments")
 router.route("/queryProfile/:username")
   .get(postControllers.queryProfile)
 
+router.route("/viewUserPosts/:username")
+  .get(postControllers.viewUserPosts)
+
 module.exports = router

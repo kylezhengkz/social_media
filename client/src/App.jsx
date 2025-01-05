@@ -50,6 +50,7 @@ function App() {
           <Route path="/auth/directLogin" element={<DirectLogin/>}/>
           <Route path="/post/createPost" element={<CreatePost/>}/>
           <Route path="/home/browse" element={<Browse/>}/>
+          <Route path="/home/browse/user" element={<Browse/>}/>
           <Route path="/myProfile" element={<MyProfile/>}/>
           <Route path="/searchUser" element={<SearchUser/>}/>
         </Routes>
