@@ -248,3 +248,19 @@ exports.getComments = async(req, res, next) => {
     next(err)
   }
 }
+
+exports.getLikes = async(req, res, next) => {
+  try {
+    console.log("POST /post/:id/getLikes")
+    id = req.params.id
+    const allLikes = await Like.findAll({
+      where: {
+        postId: id
+      }
+    })
+    console.log(JSON.stringify(allLikes))
+    res.json(allLikes)
+  } catch (err) {
+    next(err)
+  }
+}

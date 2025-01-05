@@ -32,4 +32,7 @@ router.route("/:id/addComment")
 router.route("/:id/getComments")
   .get(postControllers.getComments)
 
+router.route("/:id/getLikes")
+  .get(postControllers.getLikes)
+
 module.exports = router
