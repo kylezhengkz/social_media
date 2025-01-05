@@ -162,8 +162,8 @@ function Browse() {
               {viewCommentStatuses[value.id] && <button type="button" onClick={() => toggleViewComments(value.id)}>Hide comments</button>}
               
               {viewCommentStatuses[value.id] && comments[value.id] && 
-                comments[value.id].map((comment) => {
-                  return <p>{JSON.stringify(comment)}</p>
+                comments[value.id].map((comment, key) => {
+                  return <p key={key}>{JSON.stringify(comment)}</p>
                 })
               }
             </div>
