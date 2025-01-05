@@ -18,9 +18,6 @@ function Browse() {
       ...likeStatuses,
       [postId]: true
     })
-    axios.get("http://localhost:3000/home/browse").then((res) => {
-      setListOfPosts(res.data)
-    })
     console.log(`Like post with id ${postId}`)
   }
 
@@ -29,9 +26,6 @@ function Browse() {
     setLikeStatuses({
       ...likeStatuses,
       [postId]: false
-    })
-    axios.get("http://localhost:3000/home/browse").then((res) => {
-      setListOfPosts(res.data)
     })
     console.log(`Unlike post with id ${postId}`)
   }
