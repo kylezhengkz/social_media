@@ -189,9 +189,9 @@ exports.unlikePost = async(req, res, next) => {
   }
 }
 
-exports.totalComment = async(req, res, next) => {
+exports.totalComments = async(req, res, next) => {
   try {
-    console.log("GET /post/:id/totalComment")
+    console.log("GET /post/:id/totalComments")
     id = req.params.id
     console.log(id)
     
@@ -218,6 +218,7 @@ exports.addComment = async(req, res, next) => {
     userId = req.session.userId
     console.log(id)
     console.log(userId)
+    console.log(comment)
 
     entry = {
       "postId":id,
@@ -227,6 +228,21 @@ exports.addComment = async(req, res, next) => {
 
     await Comment.create(entry)
     res.sendStatus(200)
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.getComments = async(req, res, next) => {
+  try {
+    console.log("POST /post/:id/getComments")
+    id = req.params.id
+    const allComments = await Comment.findAll({
+      where: {
+        postId: id
+      }
+    })
+    res.sendJson(allComments)
   } catch (err) {
     next(err)
   }

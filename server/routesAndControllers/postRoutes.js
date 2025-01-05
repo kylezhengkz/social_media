@@ -23,10 +23,13 @@ router.route("/:id/likePost")
 router.route("/:id/unlikePost")
   .post(postControllers.unlikePost)
 
-router.route("/:id/totalComment")
-  .get(postControllers.totalComment)
+router.route("/:id/totalComments")
+  .get(postControllers.totalComments)
 
 router.route("/:id/addComment")
   .post(postControllers.addComment)
+
+router.route("/:id/getComments")
+  .get(postControllers.getComments)
 
 module.exports = router

@@ -9,7 +9,7 @@ exports.getHome = async(req, res) => {
   console.log(`HERE: ${JSON.stringify(req.session)}`)
   for (let i = 0; i < posts.length; i++) {
     const totalLikes = await axios.get(`http://localhost:3000/post/${posts[i].id}/totalLikes`)
-    const totalComments = await axios.get(`http://localhost:3000/post/${posts[i].id}/totalComment`)
+    const totalComments = await axios.get(`http://localhost:3000/post/${posts[i].id}/totalComments`)
     posts[i]["likes"] = totalLikes.data
     posts[i]["comments"] = totalComments.data
   }
