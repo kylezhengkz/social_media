@@ -8,12 +8,10 @@ router.route("/viewMyPosts")
 router.route("/viewPostsILiked")
   .get(postControllers.viewPostsILiked)
 
-
 router.route("/viewMyComments")
   .get(postControllers.viewMyComments)
 
-
-router.route("/:userId/viewPosts")
-  .get(postControllers.viewMyPosts)
+router.route("/queryProfile/:username")
+  .get(postControllers.queryProfile)
 
 module.exports = router

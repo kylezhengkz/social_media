@@ -1,6 +1,7 @@
 const { Post } = require("../models")
 const { Like } = require("../models")
 const { Comment } = require("../models")
+const { User } = require("../models")
 
 exports.viewMyPosts = async(req, res, next) => {
   try {
@@ -47,16 +48,39 @@ exports.viewMyComments = async(req, res, next) => {
   }
 }
 
-exports.viewUserPosts = async(req, res, next) => {
+exports.queryProfile = async(req, res, next) => {
   try {
-    console.log("GET /profile/:userId/viewPosts")
-    userId = req.params.userId
-    const findPosts = await Post.findAll({
+    console.log("GET /profile/queryProfile/:username")
+    username = req.params.username
+    const user = await User.findOne({
       where: {
-        userId: userId
+        username: username
       }
     })
-    res.json(findPosts)
+
+    if (!user) {
+      return res.json({error: "dummyError"})
+    }
+
+    const findPosts = await Post.findAll({
+      where: {
+        userId: user.id
+      }
+    })
+
+    const findLikedPosts = await Like.findAll({
+      where: {
+        userId: user.id
+      }
+    })
+
+    const findComments = await Comment.findAll({
+      where: {
+        userId: user.id
+      }
+    })
+
+    res.json({"posts": findPosts, "likedPosts": findLikedPosts, "comments": findComments})
   } catch (err) {
     next(err)
   }

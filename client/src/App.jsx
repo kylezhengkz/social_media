@@ -9,6 +9,7 @@ import DirectLogin from "./pages/DirectLogin"
 import CreatePost from "./pages/CreatePost"
 import Browse from "./pages/Browse"
 import MyProfile from "./pages/MyProfile"
+import SearchUser from "./pages/SearchUser"
 import { useState, useEffect } from "react"
 import axios from "axios"
 
@@ -38,6 +39,7 @@ function App() {
           {isAuth && <Link to="/auth/logout">Logout</Link>}
           <Link to="/post/createPost">Create Post</Link>
           <Link to="/myProfile">My Profile</Link>
+          <Link to="/searchUser">Search User</Link>
         </div>
         <Routes>
           <Route path="/" element={<LandingPage/>}/>
@@ -49,6 +51,7 @@ function App() {
           <Route path="/post/createPost" element={<CreatePost/>}/>
           <Route path="/home/browse" element={<Browse/>}/>
           <Route path="/myProfile" element={<MyProfile/>}/>
+          <Route path="/searchUser" element={<SearchUser/>}/>
         </Routes>
       </Router>
     </>
