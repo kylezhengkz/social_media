@@ -10,8 +10,8 @@ function Browse() {
   const pendingComments = useRef({})
   const[viewCommentStatuses, setViewCommentStatuses] = useState({})
   const[viewLikerStatuses, setViewLikerStatuses] = useState({})
-  const[comments, setComments] = useState({})
-  const[likers, setLikers] = useState({})
+  const[comments, setComments] = useState([])
+  const[likers, setLikers] = useState([])
   const[likeCounts, setLikeCounts] = useState({})
   const[commentCounts, setCommentCounts] = useState({})
   const navigate = useNavigate()
@@ -161,21 +161,10 @@ function Browse() {
     })
   }
 
-
   const renderCount = useRef(1)
   useEffect(() => {
     renderCount.current += 1
   })
-
-  // just printing
-  useEffect(() => {
-    console.log(JSON.stringify(commentCounts))
-  }, [commentCounts])
-
-  // just printing
-  useEffect(() => {
-    console.log(JSON.stringify(likeCounts))
-  }, [likeCounts])
 
   return (
     <>
