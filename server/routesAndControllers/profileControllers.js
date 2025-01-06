@@ -2,6 +2,7 @@ const { Post } = require("../models")
 const { Like } = require("../models")
 const { Comment } = require("../models")
 const { User } = require("../models")
+const { Op } = require('sequelize')
 
 exports.viewMyPosts = async(req, res, next) => {
   try {
@@ -89,6 +90,7 @@ exports.queryProfile = async(req, res, next) => {
 exports.viewUserPosts = async(req, res, next) => {
   try {
     console.log("GET /profile/viewUserPosts/:username")
+    username = req.params.username
 
     const user = await User.findOne({
       where: {
@@ -113,8 +115,9 @@ exports.viewUserPosts = async(req, res, next) => {
 
 exports.viewUserLikedPosts = async(req, res, next) => {
   try {
-    console.log("GET /profile/viewUserLikedPosts")
-    
+    console.log("GET /profile/viewUserLikedPosts/:username")
+    username = req.params.username
+
     const user = await User.findOne({
       where: {
         username: username
@@ -124,8 +127,6 @@ exports.viewUserLikedPosts = async(req, res, next) => {
     if (!user) {
       throw new Error("Attempted to browse from a user that doesn't exist")
     }
-
-    userId = req.session.userId
 
     const findLikes = await Like.findAll({
       where: {
@@ -133,9 +134,20 @@ exports.viewUserLikedPosts = async(req, res, next) => {
       }
     })
 
-    
+    let postIds = []
+    // cannot like a post more than once so it should be unique
+    for (const like of findLikes) {
+      postIds.push({"id": like["postId"]})
+    }
+    console.log(postIds)
 
-    res.json(findPostsILiked)
+    const findLikedPosts = await Post.findAll({
+      where: {
+        [Op.or]: postIds
+      }
+    })
+
+    res.json(findLikedPosts)
   } catch (err) {
     next(err)
   }
@@ -143,7 +155,8 @@ exports.viewUserLikedPosts = async(req, res, next) => {
 
 exports.viewUserCommentedPosts = async(req, res, next) => {
   try {
-    console.log("GET /profile/viewUserCommentedPosts")
+    console.log("GET /profile/viewUserCommentedPosts/:username")
+    username = req.params.username
 
     const user = await User.findOne({
       where: {
@@ -155,13 +168,30 @@ exports.viewUserCommentedPosts = async(req, res, next) => {
       throw new Error("Attempted to browse from a user that doesn't exist")
     }
 
-    userId = req.session.userId
     const findComments = await Comment.findAll({
       where: {
-        userId: userId
+        userId: user.id
       }
     })
-    res.json(findComments)
+
+    let postIds = new Set()
+    for (const comment of findComments) {
+      postIds.add(comment["postId"])
+    }
+    let postIdsJson = []
+    for (const postId of postIds) {
+      postIdsJson.push({"id": postId})
+    }
+
+    console.log(postIdsJson)
+
+    const findCommentedPosts = await Post.findAll({
+      where: {
+        [Op.or]: postIdsJson
+      }
+    })
+
+    res.json(findCommentedPosts)
   } catch (err) {
     next(err)
   }

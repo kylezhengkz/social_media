@@ -52,6 +52,14 @@ function SearchUser() {
     navigate(`/home/browse/${username}`, { state: { "userPosts": {"username": username}} })
   }
 
+  function browseUserLikedPosts() {
+    navigate(`/home/browse/${username}`, { state: { "userLikedPosts": {"username": username}} })
+  }
+
+  function browseUserCommentedPosts() {
+    navigate(`/home/browse/${username}`, { state: { "userComments": {"username": username}} })
+  }
+
   return (
     <>
       <h1>Search User</h1>
@@ -75,14 +83,20 @@ function SearchUser() {
             })}
           </div>
 
-          <h1>Liked Posts</h1>
+          <div className="flex-container">
+            <h1>Liked Posts</h1>
+            <button onClick={browseUserLikedPosts}>Browse</button>
+          </div>
           <div>
             {likedPosts.map((value, key) => {
               return <li key={key}>{JSON.stringify(value)}</li>
             })}
           </div>
 
-          <h1>Comments</h1>
+          <div className="flex-container">
+            <h1>Comments</h1>
+            <button onClick={browseUserCommentedPosts}>Browse</button>
+          </div>
           <div>
             {userComments.map((value, key) => {
               return <li key={key}>{JSON.stringify(value)}</li>

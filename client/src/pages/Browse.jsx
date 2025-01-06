@@ -60,11 +60,11 @@ function Browse() {
             setListOfPosts(res.data)
           })
         } else if (userLikedPosts) {
-          axios.get("http://localhost:3000/home/browse").then((res) => {
+          axios.get(`http://localhost:3000/profile/viewUserLikedPosts/${userLikedPosts["username"]}`).then((res) => {
             setListOfPosts(res.data)
           })
         } else if (userComments) {
-          axios.get("http://localhost:3000/home/browse").then((res) => {
+          axios.get(`http://localhost:3000/profile/viewUserCommentedPosts/${userComments["username"]}`).then((res) => {
             setListOfPosts(res.data)
           })
         } else {
@@ -192,7 +192,9 @@ function Browse() {
     <>
       <p>{renderCount.current}</p>
       {userPosts && <h1>{userPosts["username"]}'s Posts </h1>}
-      {!userPosts && <h1>Browse</h1>}
+      {userLikedPosts && <h1>Posts Liked By {userLikedPosts["username"]} </h1>}
+      {userComments && <h1>{userComments["username"]} Commented in these Posts </h1>}
+      {!userPosts && !userLikedPosts && !userComments && <h1>Browse</h1>}
       <div>
         {listOfPosts.map((value) => {
           return (

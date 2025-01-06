@@ -17,4 +17,10 @@ router.route("/queryProfile/:username")
 router.route("/viewUserPosts/:username")
   .get(postControllers.viewUserPosts)
 
+router.route("/viewUserLikedPosts/:username")
+  .get(postControllers.viewUserLikedPosts)
+
+router.route("/viewUserCommentedPosts/:username")
+  .get(postControllers.viewUserCommentedPosts)
+
 module.exports = router
