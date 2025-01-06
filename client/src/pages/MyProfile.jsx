@@ -87,8 +87,8 @@ function MyProfile() {
                     : post
                 )
               )
-              pendingTitles.current[value.id] = ""
-              pendingBodies.current[value.id] = ""
+              pendingTitles.current[value.id] = newTitle
+              pendingBodies.current[value.id] = newBody
             }}>
               {myPostEditStatuses[value.id] && <input placeholder="Title" type="text" maxLength="100" defaultValue={value.postTitle} onChange={(e) => {
                 pendingTitles.current = {

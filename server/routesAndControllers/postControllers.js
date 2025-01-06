@@ -45,6 +45,8 @@ exports.editPost = async(req, res, next) => {
     console.log("POST /post/edit/:id")
 
     const { newTitle, newBody } = req.body
+    console.log(newTitle)
+    console.log(newBody)
     id = req.params.id
     console.log(id)
 
