@@ -40,6 +40,29 @@ exports.createPost = async(req, res, next) => {
   }
 }
 
+exports.editPost = async(req, res, next) => {
+  try {
+    console.log("POST /post/edit/:id")
+
+    const { newTitle, newBody } = req.body
+    id = req.params.id
+    console.log(id)
+
+    await Post.update(
+      { postTitle: newTitle, postBody: newBody },
+      {
+        where: {
+          id: id,
+        },
+      },
+    );
+        
+    res.sendStatus(200)
+  } catch (err) {
+    next(err)
+  }
+}
+
 exports.deletePost = async(req, res, next) => {
   try {
     console.log("POST /post/delete/:id")

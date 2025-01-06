@@ -5,7 +5,10 @@ const postControllers = require("./postControllers")
 router.route("/create")
   .post(postControllers.createPost)
 
-router.route("/delete")
+router.route("/edit/:id")
+  .post(postControllers.editPost)
+
+router.route("/delete/:id")
   .post(postControllers.deletePost)
 
 router.route("/:id")
