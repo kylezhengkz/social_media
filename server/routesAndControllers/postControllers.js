@@ -1,6 +1,7 @@
 const { Post } = require("../models")
 const { Like } = require("../models")
 const { Comment } = require("../models")
+const { User } = require("../models")
 
 function getDateStr() {
   let d = new Date()
@@ -240,6 +241,30 @@ exports.getComments = async(req, res, next) => {
     const allComments = await Comment.findAll({
       where: {
         postId: id
+      }
+    })
+    console.log(JSON.stringify(allComments))
+    res.json(allComments)
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.getUserComments = async(req, res, next) => {
+  try {
+    console.log("GET /post/:id/getComments/:username")
+    id = req.params.id
+    username = req.params.username
+    console.log(username)
+    const user = await User.findOne({
+      where: {
+        username: username
+      }
+    })
+    const allComments = await Comment.findAll({
+      where: {
+        postId: id,
+        userId: user.id
       }
     })
     console.log(JSON.stringify(allComments))

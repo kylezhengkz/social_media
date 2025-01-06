@@ -32,6 +32,9 @@ router.route("/:id/addComment")
 router.route("/:id/getComments")
   .get(postControllers.getComments)
 
+router.route("/:id/getUserComments/:username")
+  .get(postControllers.getUserComments)
+
 router.route("/:id/getLikes")
   .get(postControllers.getLikes)
 

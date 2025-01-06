@@ -16,6 +16,7 @@ function Browse() {
   const[likeCounts, setLikeCounts] = useState({})
   const[commentCounts, setCommentCounts] = useState({})
   const navigate = useNavigate()
+  const[userCommentsState, setUserComments] = useState([])
 
   const location = useLocation()
   const { userPosts, userLikedPosts, userComments } = location.state || {}
@@ -65,6 +66,7 @@ function Browse() {
           })
         } else if (userComments) {
           axios.get(`http://localhost:3000/profile/viewUserCommentedPosts/${userComments["username"]}`).then((res) => {
+            console.log("DEEZ NUTS")
             setListOfPosts(res.data)
           })
         } else {
@@ -89,18 +91,22 @@ function Browse() {
       let viewLikerStatusesJson = {}
       let likeCountsJson = {}
       let commentCountsJson = {}
+      let userCommentsJson = {}
       for (const post of listOfPosts) {
         const didUserLikePost = await axios.get(`http://localhost:3000/post/${post.id}/didUserLikePost`)
         const likeCount = await axios.get(`http://localhost:3000/post/${post.id}/totalLikes`)
         const commentCount = await axios.get(`http://localhost:3000/post/${post.id}/totalComments`)
+        if (userComments) {
+          var getUserComments = await axios.get(`http://localhost:3000/post/${post.id}/getUserComments/${userComments["username"]}`)
+          userCommentsJson[post.id] = getUserComments.data
+          setUserComments(userCommentsJson)
+        }
         likeStatusesJson[post.id] = didUserLikePost.data
         commentStatusesJson[post.id] = false
         viewCommentStatusesJson[post.id] = false
         viewLikerStatusesJson[post.id] = false
         likeCountsJson[post.id] = likeCount.data
         commentCountsJson[post.id] = commentCount.data
-        console.log(post.id)
-        console.log(didUserLikePost.data)
       }
       setLikeStatuses(likeStatusesJson)
       setCommentStatuses(commentStatusesJson)
@@ -251,6 +257,12 @@ function Browse() {
               {!viewCommentStatuses[value.id] && <button type="button" onClick={() => toggleViewComments(value.id)}>View {commentCounts[value.id] && commentCounts[value.id]} comments</button>}
               {viewCommentStatuses[value.id] && <button type="button" onClick={() => toggleViewComments(value.id)}>Hide comments</button>}
               
+              {userComments && !viewCommentStatuses[value.id] && userCommentsState[value.id] &&
+                userCommentsState[value.id].map((comment, key) => {
+                  return <p key={key}>{JSON.stringify(comment)}</p>
+                })
+              }
+
               {viewCommentStatuses[value.id] && comments[value.id] && 
                 comments[value.id].map((comment, key) => {
                   return <p key={key}>{JSON.stringify(comment)}</p>
