@@ -57,19 +57,19 @@ function Browse() {
 
       if (checkAuth.data.isAuth) {
         if (userPosts) {
-          axios.get(`http://localhost:3000/profile/viewUserPosts/${userPosts["username"]}`).then((res) => {
+          await axios.get(`http://localhost:3000/profile/viewUserPosts/${userPosts["username"]}`).then((res) => {
             setListOfPosts(res.data)
           })
         } else if (userLikedPosts) {
-          axios.get(`http://localhost:3000/profile/viewUserLikedPosts/${userLikedPosts["username"]}`).then((res) => {
+          await axios.get(`http://localhost:3000/profile/viewUserLikedPosts/${userLikedPosts["username"]}`).then((res) => {
             setListOfPosts(res.data)
           })
         } else if (userComments) {
-          axios.get(`http://localhost:3000/profile/viewUserCommentedPosts/${userComments["username"]}`).then((res) => {
+          await axios.get(`http://localhost:3000/profile/viewUserCommentedPosts/${userComments["username"]}`).then((res) => {
             setListOfPosts(res.data)
           })
         } else {
-          axios.get("http://localhost:3000/home/browse").then((res) => {
+          await axios.get("http://localhost:3000/home/browse").then((res) => {
             setListOfPosts(res.data)
           })
         }

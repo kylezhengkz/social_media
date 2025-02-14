@@ -17,15 +17,14 @@ function MyProfile() {
       let checkAuth = await axios.get("http://localhost:3000/auth/checkAuth")
 
       if (checkAuth.data.isAuth) {
-        axios.get("http://localhost:3000/profile/viewMyPosts").then((res) => {
-          setMyPosts(res.data)
-        })
-        axios.get("http://localhost:3000/profile/viewPostsILiked").then((res) => {
-          setPostsILiked(res.data)
-        })
-        axios.get("http://localhost:3000/profile/viewMyComments").then((res) => {
-          setMyComments(res.data)
-        })
+        const [postsJson, likedPosts, commentsJson] = await Promise.all([
+          axios.get("http://localhost:3000/profile/viewMyPosts"),
+          axios.get("http://localhost:3000/profile/viewPostsILiked"),
+          axios.get("http://localhost:3000/profile/viewMyComments")
+        ])
+        setMyPosts(postsJson.data)
+        setPostsILiked(likedPosts.data)
+        setMyComments(commentsJson.data)
       } else {
         console.log("User not authenticated");
         navigate('/auth/directLogin', { state: { pageName: '/home' } })
@@ -40,13 +39,13 @@ function MyProfile() {
     let pendingBodiesJson = {}
     for (const post of myPosts) {
       myPostEditStatusesJson[post.id] = false
-      pendingTitlesJson.current[post.id] = post.postTitle
-      pendingBodiesJson.current[post.id] = post.postBody
+      pendingTitlesJson[post.id] = post.postTitle
+      pendingBodiesJson[post.id] = post.postBody
     }
     setMyPostEditStatuses(myPostEditStatusesJson)
     pendingTitles.current = pendingTitlesJson
     pendingBodies.current = pendingBodiesJson
-  }, [])
+  }, [myPosts])
 
   function toggleEdit(postId) {
     console.log(postId)
