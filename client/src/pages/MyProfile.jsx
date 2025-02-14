@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
+import "./MyProfile.css"
 
 function MyProfile() {
   const [myPosts, setMyPosts] = useState([])
@@ -10,7 +11,7 @@ function MyProfile() {
   const [myPostEditStatuses, setMyPostEditStatuses] = useState({})
   const pendingTitles = useRef({})
   const pendingBodies = useRef({})
-
+  
   useEffect(() => {
     async function conditionalRender() {
       let checkAuth = await axios.get("http://localhost:3000/auth/checkAuth")
@@ -34,14 +35,18 @@ function MyProfile() {
   }, [navigate])
 
   useEffect(() => {
-    console.log(myPosts)
+    let myPostEditStatusesJson = {}
+    let pendingTitlesJson = {}
+    let pendingBodiesJson = {}
     for (const post of myPosts) {
-      setMyPostEditStatuses({
-        ...myPostEditStatuses,
-        [post.id]: false
-      })
+      myPostEditStatusesJson[post.id] = false
+      pendingTitlesJson.current[post.id] = post.postTitle
+      pendingBodiesJson.current[post.id] = post.postBody
     }
-  }, [myPosts])
+    setMyPostEditStatuses(myPostEditStatusesJson)
+    pendingTitles.current = pendingTitlesJson
+    pendingBodies.current = pendingBodiesJson
+  }, [])
 
   function toggleEdit(postId) {
     console.log(postId)
@@ -58,6 +63,10 @@ function MyProfile() {
     }
   }
 
+  function deletePost(postId) {
+    console.log(postId)
+  }
+
   return (
     <>
       <h1>My Profile</h1>
@@ -68,46 +77,54 @@ function MyProfile() {
           // userContribution is meant to be the umbrella term for post, like and comment
           return (<div className="userContribution" key={key}>
             <li key={key}>{JSON.stringify(value)}</li>
-            {!myPostEditStatuses[value.id] && <button type="button" onClick={() => toggleEdit(value.id)}>Edit</button>}
-            {myPostEditStatuses[value.id] && <button type="button" onClick={() => toggleEdit(value.id)}>Cancel edit</button>}
-            <button type="button">Delete</button>
-            <form onSubmit={async (e) => {
-              e.preventDefault()
-              const newTitle = pendingTitles.current[value.id]
-              const newBody = pendingBodies.current[value.id]
-              await axios.post(`http://localhost:3000/post/edit/${value.id}`, {"newTitle":newTitle, "newBody":newBody})
-              setMyPostEditStatuses({
-                ...myPostEditStatuses,
-                [value.id]: false
-              })
-              setMyPosts(
-                myPosts.map(post =>
-                  post.id === value.id
-                    ? {...post, "postTitle":newTitle, "postBody":newBody}
-                    : post
-                )
-              )
-              pendingTitles.current[value.id] = newTitle
-              pendingBodies.current[value.id] = newBody
-            }}>
-              {myPostEditStatuses[value.id] && <input placeholder="Title" type="text" maxLength="100" defaultValue={value.postTitle} onChange={(e) => {
-                pendingTitles.current = {
-                  ...pendingTitles.current,
-                  [value.id]:e.target.value
-                }
-              }}/>}
-              {myPostEditStatuses[value.id] && <br></br>}
-              {myPostEditStatuses[value.id] && <input placeholder="Body" type="text" maxLength="2200" defaultValue={value.postBody} onChange={(e) => {
-                pendingBodies.current = {
-                  ...pendingBodies.current,
-                  [value.id]:e.target.value
-                }
-              }}/>}
-              {myPostEditStatuses[value.id] && <br></br>}
-              {myPostEditStatuses[value.id] && 
-                <button type="submit">Submit</button>
-              }
-            </form>
+            {!myPostEditStatuses[value.id] && 
+              <>
+                <button type="button" onClick={() => toggleEdit(value.id)}>Edit</button>
+                <button type="button" onClick={() => deletePost(value.id)}>Delete</button>
+              </>
+            }
+            {myPostEditStatuses[value.id] && 
+              <>
+                <button type="button" onClick={() => toggleEdit(value.id)}>Cancel edit</button>
+                <form onSubmit={async (e) => {
+                  e.preventDefault()
+                  const newTitle = pendingTitles.current[value.id]
+                  const newBody = pendingBodies.current[value.id]
+                  await axios.post(`http://localhost:3000/post/edit/${value.id}`, {"newTitle":newTitle, "newBody":newBody})
+                  setMyPostEditStatuses({
+                    ...myPostEditStatuses,
+                    [value.id]: false
+                  })
+                  setMyPosts(
+                    myPosts.map(post =>
+                      post.id === value.id
+                        ? {...post, "postTitle":newTitle, "postBody":newBody}
+                        : post
+                    )
+                  )
+                  pendingTitles.current[value.id] = newTitle
+                  pendingBodies.current[value.id] = newBody
+                }}>
+                  {myPostEditStatuses[value.id] && 
+                    <>
+                      <input placeholder="Title" type="text" maxLength="100" defaultValue={value.postTitle} onChange={(e) => {
+                        pendingTitles.current = {
+                          ...pendingTitles.current,
+                          [value.id]:e.target.value
+                        }
+                      }}/>
+                      <input placeholder="Body" type="text" maxLength="2200" defaultValue={value.postBody} onChange={(e) => {
+                        pendingBodies.current = {
+                          ...pendingBodies.current,
+                          [value.id]:e.target.value
+                        }
+                      }}/>
+                      <button type="submit">Submit</button>
+                    </>
+                  }
+                </form>
+              </>
+            }
           </div>)
         })}
       </div>

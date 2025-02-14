@@ -66,7 +66,6 @@ function Browse() {
           })
         } else if (userComments) {
           axios.get(`http://localhost:3000/profile/viewUserCommentedPosts/${userComments["username"]}`).then((res) => {
-            console.log("DEEZ NUTS")
             setListOfPosts(res.data)
           })
         } else {
