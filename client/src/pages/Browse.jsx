@@ -62,6 +62,7 @@ function Browse() {
           })
         } else if (userLikedPosts) {
           await axios.get(`http://localhost:3000/profile/viewUserLikedPosts/${userLikedPosts["username"]}`).then((res) => {
+            console.log(res.data)
             setListOfPosts(res.data)
           })
         } else if (userComments) {

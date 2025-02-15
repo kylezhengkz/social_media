@@ -139,7 +139,6 @@ exports.viewUserLikedPosts = async(req, res, next) => {
     for (const like of findLikes) {
       postIds.push({"id": like["postId"]})
     }
-    console.log(postIds)
 
     const findLikedPosts = await Post.findAll({
       where: {
