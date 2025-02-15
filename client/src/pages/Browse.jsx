@@ -22,8 +22,8 @@ function Browse() {
   const { userPosts, userLikedPosts, userComments } = location.state || {}
 
   console.log(`userPosts: ${JSON.stringify(userPosts)}`)
-  console.log(`userLikedPosts: ${userLikedPosts}`)
-  console.log(`userComments: ${userComments}`)
+  console.log(`userLikedPosts: ${JSON.stringify(userLikedPosts)}`)
+  console.log(`userComments: ${JSON.stringify(userComments)}`)
 
   const likePost = async (postId) => {
     await axios.post(`http://localhost:3000/post/${postId}/likePost`)

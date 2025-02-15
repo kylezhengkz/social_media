@@ -16,10 +16,6 @@ module.exports = (sequelize, DataTypes) => {
     indexes: [
       {
         unique: false,
-        fields: ["postId", "userId"]
-      },
-      {
-        unique: false,
         fields: ["postId"]
       },
       {

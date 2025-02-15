@@ -22,21 +22,16 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Post, {
       onDelete: "cascade",
       foreignKey: "userId"
-    })
-  }
-
-  User.associate = (models) => {
+    }),
     User.hasMany(models.Like, {
       onDelete: "cascade",
       foreignKey: "userId"
-    })
-  }
-
-  User.associate = (models) => {
+    }),
     User.hasMany(models.Comment, {
       onDelete: "cascade",
       foreignKey: "userId"
     })
   }
+
   return User
 }
