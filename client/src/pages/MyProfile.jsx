@@ -8,10 +8,10 @@ function MyProfile() {
   const [postsILiked, setPostsILiked] = useState([])
   const [myComments, setMyComments] = useState([])
   const navigate = useNavigate()
-  const [myPostEditStatuses, setMyPostEditStatuses] = useState({})
-  const pendingTitles = useRef({})
-  const pendingBodies = useRef({})
-  
+  const [editPost, setEditPost] = useState(-1)
+  const pendingTitle = useRef("")
+  const pendingBody = useRef("")  
+
   useEffect(() => {
     async function conditionalRender() {
       let checkAuth = await axios.get("http://localhost:3000/auth/checkAuth")
@@ -34,32 +34,20 @@ function MyProfile() {
   }, [navigate])
 
   useEffect(() => {
-    let myPostEditStatusesJson = {}
-    let pendingTitlesJson = {}
-    let pendingBodiesJson = {}
-    for (const post of myPosts) {
-      myPostEditStatusesJson[post.id] = false
-      pendingTitlesJson[post.id] = post.postTitle
-      pendingBodiesJson[post.id] = post.postBody
-    }
-    setMyPostEditStatuses(myPostEditStatusesJson)
-    pendingTitles.current = pendingTitlesJson
-    pendingBodies.current = pendingBodiesJson
+    console.log(myPosts)
   }, [myPosts])
 
-  function toggleEdit(postId) {
+  function editPostAction(postId, postTitle, postBody) {
     console.log(postId)
-    if (myPostEditStatuses[postId]) {
-      setMyPostEditStatuses({
-        ...myPostEditStatuses,
-        [postId]: false
-      })
-    } else {
-      setMyPostEditStatuses({
-        ...myPostEditStatuses,
-        [postId]: true
-      })
-    }
+    console.log(postTitle)
+    console.log(postBody)
+    setEditPost(postId)
+    pendingTitle.current = postTitle
+    pendingBody.current = postBody
+  }
+
+  function cancelEdit() {
+    setEditPost(-1)
   }
 
   function deletePost(postId) {
@@ -74,55 +62,42 @@ function MyProfile() {
       <div>
         {myPosts.map((value, key) => {
           // userContribution is meant to be the umbrella term for post, like and comment
-          return (<div className="userContribution" key={key}>
+          return (<div key={key}>
             <li key={key}>{JSON.stringify(value)}</li>
-            {!myPostEditStatuses[value.id] && 
-              <>
-                <button type="button" onClick={() => toggleEdit(value.id)}>Edit</button>
-                <button type="button" onClick={() => deletePost(value.id)}>Delete</button>
-              </>
-            }
-            {myPostEditStatuses[value.id] && 
-              <>
-                <button type="button" onClick={() => toggleEdit(value.id)}>Cancel edit</button>
+            <button type="button" onClick={() => editPostAction(value.id, value.postTitle, value.postBody)}>Edit</button>
+            <button type="button" onClick={() => deletePost(value.id)}>Delete</button>
+            
+            {editPost === value.id &&
+              <div id="editPost">
                 <form onSubmit={async (e) => {
-                  e.preventDefault()
-                  const newTitle = pendingTitles.current[value.id]
-                  const newBody = pendingBodies.current[value.id]
-                  await axios.post(`http://localhost:3000/post/edit/${value.id}`, {"newTitle":newTitle, "newBody":newBody})
-                  setMyPostEditStatuses({
-                    ...myPostEditStatuses,
-                    [value.id]: false
-                  })
-                  setMyPosts(
-                    myPosts.map(post =>
-                      post.id === value.id
-                        ? {...post, "postTitle":newTitle, "postBody":newBody}
-                        : post
+                    e.preventDefault()
+                    const newTitle = pendingTitle.current
+                    const newBody = pendingBody.current
+                    console.log(value.id)
+                    console.log(newTitle)
+                    console.log(newBody)
+                    await axios.post(`http://localhost:3000/post/edit/${value.id}`, {"newTitle":newTitle, "newBody":newBody})
+                    setEditPost(-1)
+                    setMyPosts(
+                      myPosts.map(post =>
+                        post.id === value.id
+                          ? {...post, "postTitle":newTitle, "postBody":newBody}
+                          : post
+                      )
                     )
-                  )
-                  pendingTitles.current[value.id] = newTitle
-                  pendingBodies.current[value.id] = newBody
-                }}>
-                  {myPostEditStatuses[value.id] && 
+                  }}>
                     <>
                       <input placeholder="Title" type="text" maxLength="100" defaultValue={value.postTitle} onChange={(e) => {
-                        pendingTitles.current = {
-                          ...pendingTitles.current,
-                          [value.id]:e.target.value
-                        }
+                        pendingTitle.current = e.target.value
                       }}/>
                       <input placeholder="Body" type="text" maxLength="2200" defaultValue={value.postBody} onChange={(e) => {
-                        pendingBodies.current = {
-                          ...pendingBodies.current,
-                          [value.id]:e.target.value
-                        }
+                        pendingBody.current = e.target.value
                       }}/>
                       <button type="submit">Submit</button>
                     </>
-                  }
-                </form>
-              </>
+                  </form>
+                  <button type="button" onClick={() => cancelEdit(value.id)}>Cancel edit</button>
+              </div>
             }
           </div>)
         })}
