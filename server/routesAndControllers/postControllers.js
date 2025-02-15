@@ -43,6 +43,10 @@ exports.createPost = async(req, res, next) => {
 exports.editPost = async(req, res, next) => {
   try {
     console.log("POST /post/edit/:id")
+    userId = req.session.userId
+    if (!userId) {
+      throw new Error("Attempted to edit post without being authenticated")
+    }
 
     const { newTitle, newBody } = req.body
     console.log(newTitle)
@@ -55,6 +59,7 @@ exports.editPost = async(req, res, next) => {
       {
         where: {
           id: id,
+          userId: userId
         },
       },
     );
@@ -70,14 +75,15 @@ exports.deletePost = async(req, res, next) => {
     console.log("POST /post/delete/:id")
     userId = req.session.userId
     if (!userId) {
-      throw new Error("Attempted to create post without being authenticated")
+      throw new Error("Attempted to delete post without being authenticated")
     }
     console.log(userId)
 
     id = req.params.id
     const findPost = await Post.findOne({
       where: {
-        id: id
+        id: id,
+        userId: userId
       }
     })
 

@@ -11,6 +11,7 @@ function MyProfile() {
   const [editPost, setEditPost] = useState(-1)
   const pendingTitle = useRef("")
   const pendingBody = useRef("")  
+  const [deletePostStatus, setDeletePostStatus] = useState(-1)
 
   useEffect(() => {
     async function conditionalRender() {
@@ -50,8 +51,13 @@ function MyProfile() {
     setEditPost(-1)
   }
 
-  function deletePost(postId) {
+  function toggleDeletePost(postId) {
     console.log(postId)
+    if (deletePostStatus === postId) {
+      setDeletePostStatus(-1)
+    } else {
+      setDeletePostStatus(postId)
+    }
   }
 
   return (
@@ -65,7 +71,7 @@ function MyProfile() {
           return (<div key={key}>
             <li key={key}>{JSON.stringify(value)}</li>
             <button type="button" onClick={() => editPostAction(value.id, value.postTitle, value.postBody)}>Edit</button>
-            <button type="button" onClick={() => deletePost(value.id)}>Delete</button>
+            <button type="button" onClick={() => toggleDeletePost(value.id)}>Delete</button>
             
             {editPost === value.id &&
               <div id="editPost">
@@ -99,6 +105,19 @@ function MyProfile() {
                   <button type="button" onClick={() => cancelEdit(value.id)}>Cancel edit</button>
               </div>
             }
+
+            {deletePostStatus === value.id &&
+              <div id="deletePost">
+                <p>Are you sure you want to delete post titled {value.postTitle}?</p>
+                <button onClick={async () => {
+                  await axios.post(`http://localhost:3000/post/delete/${value.id}`)
+                  toggleDeletePost(value.id)
+                }}>Yes</button>
+                <button onClick={() => toggleDeletePost(value.id)}>No</button>
+              </div>
+            }
+
+
           </div>)
         })}
       </div>
