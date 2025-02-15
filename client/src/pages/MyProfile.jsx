@@ -67,7 +67,6 @@ function MyProfile() {
       <h1>Posts</h1>
       <div>
         {myPosts.map((value, key) => {
-          // userContribution is meant to be the umbrella term for post, like and comment
           return (<div key={key}>
             <li key={key}>{JSON.stringify(value)}</li>
             <button type="button" onClick={() => editPostAction(value.id, value.postTitle, value.postBody)}>Edit</button>
@@ -111,12 +110,34 @@ function MyProfile() {
                 <p>Are you sure you want to delete post titled {value.postTitle}?</p>
                 <button onClick={async () => {
                   await axios.post(`http://localhost:3000/post/delete/${value.id}`)
+                  // need to remove all posts from state, including your likes and comments to that post
+                  let newPosts = []
+                  console.log(myPosts)
+                  for (const post of myPosts) {
+                    if (post.id !== value.id) {
+                      newPosts.push(post)
+                    }
+                  }
+                  setMyPosts(newPosts)
+                  let newPostsILiked = []
+                  for (const likedPost of postsILiked) {
+                    if (likedPost.postId !== value.id) {
+                      newPostsILiked.push(likedPost)
+                    }
+                  }
+                  setPostsILiked(newPostsILiked)
+                  let newComments = []
+                  for (const comment of myComments) {
+                    if (comment.postId !== value.id) {
+                      newComments.push(comment)
+                    }
+                  }
+                  setMyComments(newComments)
                   toggleDeletePost(value.id)
                 }}>Yes</button>
                 <button onClick={() => toggleDeletePost(value.id)}>No</button>
               </div>
             }
-
 
           </div>)
         })}
