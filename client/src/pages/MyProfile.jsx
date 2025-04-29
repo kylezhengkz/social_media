@@ -6,6 +6,7 @@ import "./MyProfile.css"
 function MyProfile() {
   const [myPosts, setMyPosts] = useState([])
   const [postsILiked, setPostsILiked] = useState([])
+  const [likeStatuses, setLikeStatuses] = useState([])
   const [myComments, setMyComments] = useState([])
   const navigate = useNavigate()
   const [editPost, setEditPost] = useState(-1)
@@ -36,7 +37,20 @@ function MyProfile() {
 
   useEffect(() => {
     console.log(myPosts)
+    console.log(postsILiked)
+    console.log(myComments)
+    
+    let likeStatusesJson = {}
+    for (const postILiked of postsILiked) {
+      likeStatusesJson[postILiked.id] = true
+    }
+    setLikeStatuses(likeStatusesJson)
   }, [myPosts])
+
+  // just printing
+  useEffect(() => {
+    console.log(likeStatuses)
+  }, [likeStatuses])
 
   function editPostAction(postId, postTitle, postBody) {
     console.log(postId)
@@ -146,14 +160,40 @@ function MyProfile() {
       <h1>Posts You've Liked</h1>
       <div>
         {postsILiked.map((value, key) => {
-          return <li key={key}>{JSON.stringify(value)}</li>
+          return <div key={key}>
+              <li key={key}>{JSON.stringify(value)}</li>
+              {likeStatuses[value.id] && 
+                <button type="button" onClick={async () => {
+                  await axios.post(`http://localhost:3000/post/${value.postId}/unlikePost`)
+                  setLikeStatuses({
+                    ...likeStatuses,
+                    [value.id]: false
+                  })
+                }
+                }>Unlike</button>
+              }
+              {!likeStatuses[value.id] && 
+                <button type="button" onClick={async () => {
+                  await axios.post(`http://localhost:3000/post/${value.postId}/likePost`)
+                  setLikeStatuses({
+                    ...likeStatuses,
+                    [value.id]: true
+                  })
+                }
+                }>Like</button>
+              }
+            </div>
         })}
       </div>
 
       <h1>Comments</h1>
       <div>
         {myComments.map((value, key) => {
-          return <li key={key}>{JSON.stringify(value)}</li>
+          return <div key={key}>
+            <li key={key}>{JSON.stringify(value)}</li>
+            <button type="button" onClick={() => editPostAction(value.id, value.postTitle, value.postBody)}>Edit</button>
+            <button type="button" onClick={() => toggleDeletePost(value.id)}>Delete</button>
+           </div>
         })}
       </div>
     </>
