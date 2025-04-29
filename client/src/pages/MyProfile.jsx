@@ -4,15 +4,21 @@ import { useNavigate } from 'react-router-dom'
 import "./MyProfile.css"
 
 function MyProfile() {
-  const [myPosts, setMyPosts] = useState([])
-  const [postsILiked, setPostsILiked] = useState([])
-  const [likeStatuses, setLikeStatuses] = useState([])
-  const [myComments, setMyComments] = useState([])
-  const navigate = useNavigate()
-  const [editPost, setEditPost] = useState(-1)
+
+  // store user's posts, likes, comments
+  const [myPosts, setMyPosts] = useState({})
+  const [postsILiked, setPostsILiked] = useState({})
+  const [myComments, setMyComments] = useState({})
+
+  const [likeStatuses, setLikeStatuses] = useState({}) // toggle like/unlike display when user unlikes/relikes a post
+  const [editPost, setEditPost] = useState(-1) // if user wants to edit a post, sets to post id
+  const [deletePostStatus, setDeletePostStatus] = useState(-1) // if user wants to delete a post, sets to post id
+
+  // stores pending edits of post before submitting changes
   const pendingTitle = useRef("")
-  const pendingBody = useRef("")  
-  const [deletePostStatus, setDeletePostStatus] = useState(-1)
+  const pendingBody = useRef("")
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function conditionalRender() {
@@ -36,12 +42,12 @@ function MyProfile() {
   }, [navigate])
 
   useEffect(() => {
-    console.log(myPosts)
-    console.log(postsILiked)
-    console.log(myComments)
+    console.log(Object.values(myPosts))
+    console.log(Object.values(postsILiked))
+    console.log(Object.values(myComments))
     
     let likeStatusesJson = {}
-    for (const postILiked of postsILiked) {
+    for (const postILiked of Object.values(postsILiked)) {
       likeStatusesJson[postILiked.id] = true
     }
     setLikeStatuses(likeStatusesJson)
@@ -49,30 +55,8 @@ function MyProfile() {
 
   // just printing
   useEffect(() => {
-    console.log(likeStatuses)
+    console.log(Object.values(likeStatuses))
   }, [likeStatuses])
-
-  function editPostAction(postId, postTitle, postBody) {
-    console.log(postId)
-    console.log(postTitle)
-    console.log(postBody)
-    setEditPost(postId)
-    pendingTitle.current = postTitle
-    pendingBody.current = postBody
-  }
-
-  function cancelEdit() {
-    setEditPost(-1)
-  }
-
-  function toggleDeletePost(postId) {
-    console.log(postId)
-    if (deletePostStatus === postId) {
-      setDeletePostStatus(-1)
-    } else {
-      setDeletePostStatus(postId)
-    }
-  }
 
   return (
     <>
@@ -80,11 +64,26 @@ function MyProfile() {
 
       <h1>Posts</h1>
       <div>
-        {myPosts.map((value, key) => {
+        {Object.values(myPosts).map((value, key) => {
           return (<div key={key}>
             <li key={key}>{JSON.stringify(value)}</li>
-            <button type="button" onClick={() => editPostAction(value.id, value.postTitle, value.postBody)}>Edit</button>
-            <button type="button" onClick={() => toggleDeletePost(value.id)}>Delete</button>
+            <button type="button" onClick={() => {
+              // edit post
+              console.log(postId)
+              console.log(postTitle)
+              console.log(postBody)
+              setEditPost(postId)
+              pendingTitle.current = postTitle
+              pendingBody.current = postBody
+            }}>Edit</button>
+            <button type="button" onClick={() => {
+              console.log(postId)
+              if (deletePostStatus === postId) {
+                setDeletePostStatus(-1)
+              } else {
+                setDeletePostStatus(postId)
+              }
+            }}>Delete</button>
             
             {editPost === value.id &&
               <div id="editPost">
@@ -115,7 +114,9 @@ function MyProfile() {
                       <button type="submit">Submit</button>
                     </>
                   </form>
-                  <button type="button" onClick={() => cancelEdit(value.id)}>Cancel edit</button>
+                  <button type="button" onClick={() => {
+                    setEditPost(-1)
+                  }}>Cancel edit</button>
               </div>
             }
 
@@ -159,7 +160,7 @@ function MyProfile() {
 
       <h1>Posts You've Liked</h1>
       <div>
-        {postsILiked.map((value, key) => {
+        {Object.values(postsILiked).map((value, key) => {
           return <div key={key}>
               <li key={key}>{JSON.stringify(value)}</li>
               {likeStatuses[value.id] && 
@@ -188,7 +189,7 @@ function MyProfile() {
 
       <h1>Comments</h1>
       <div>
-        {myComments.map((value, key) => {
+        {Object.values(myComments).map((value, key) => {
           return <div key={key}>
             <li key={key}>{JSON.stringify(value)}</li>
             <button type="button" onClick={() => editPostAction(value.id, value.postTitle, value.postBody)}>Edit</button>
