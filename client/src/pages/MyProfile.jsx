@@ -76,19 +76,20 @@ function MyProfile() {
             <li key={key}>{JSON.stringify(value)}</li>
             <button type="button" onClick={() => {
               // edit post
-              console.log(postId)
-              console.log(postTitle)
-              console.log(postBody)
-              setEditPost(postId)
-              pendingTitle.current = postTitle
-              pendingBody.current = postBody
+              console.log(value.id)
+              console.log(value.postTitle)
+              console.log(value.postBody)
+              setEditPost(value.id)
+              pendingTitle.current = value.postTitle
+              pendingBody.current = value.postBody
             }}>Edit</button>
+
             <button type="button" onClick={() => {
-              console.log(postId)
-              if (deletePostStatus === postId) {
+              console.log(value.id)
+              if (deletePostStatus === value.id) {
                 setDeletePostStatus(-1)
               } else {
-                setDeletePostStatus(postId)
+                setDeletePostStatus(value.id)
               }
             }}>Delete</button>
             
@@ -134,31 +135,11 @@ function MyProfile() {
                   beginLoading(value.id) // disables button to avoid race condition where user clicks rapidly multiple times sending new requests when previous didn't finish yet
                   await axios.post(`http://localhost:3000/post/delete/${value.id}`)
 
-                  // need to remove all posts from state, including your likes and comments to that post
-                  setMyPosts()
-
-                  let newPosts = []
+                  // remove post, and potentially likes/comments associated to that post
                   console.log(myPosts)
-                  for (const post of myPosts) {
-                    if (post.id !== value.id) {
-                      newPosts.push(post)
-                    }
-                  }
-                  setMyPosts(newPosts)
-                  let newPostsILiked = []
-                  for (const likedPost of postsILiked) {
-                    if (likedPost.postId !== value.id) {
-                      newPostsILiked.push(likedPost)
-                    }
-                  }
-                  setPostsILiked(newPostsILiked)
-                  let newComments = []
-                  for (const comment of myComments) {
-                    if (comment.postId !== value.id) {
-                      newComments.push(comment)
-                    }
-                  }
-                  setMyComments(newComments)
+                  setMyPosts(prev => prev.filter(post => post.id !== value.id))
+                  setPostsILiked(prev => prev.filter(likedPost => likedPost.postId !== value.id))
+                  setMyComments(prev => prev.filter(comment => postId.id !== value.id))
                   toggleDeletePost(value.id)
                   finishLoading(value.id)
                 }}>Yes</button>
