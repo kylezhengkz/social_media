@@ -7,9 +7,9 @@ import useLoading from "../custom_hooks/useLoading"
 function MyProfile() {
 
   // store user's posts, likes, comments
-  const [myPosts, setMyPosts] = useState({})
-  const [postsILiked, setPostsILiked] = useState({})
-  const [myComments, setMyComments] = useState({})
+  const [myPosts, setMyPosts] = useState([])
+  const [postsILiked, setPostsILiked] = useState([])
+  const [myComments, setMyComments] = useState([])
 
   const [likeStatuses, setLikeStatuses] = useState({}) // toggle like/unlike display when user unlikes/relikes a post
   const [editPost, setEditPost] = useState(-1) // if user wants to edit a post, sets to post id
@@ -49,12 +49,12 @@ function MyProfile() {
   }, [navigate])
 
   useEffect(() => {
-    console.log(Object.values(myPosts))
-    console.log(Object.values(postsILiked))
-    console.log(Object.values(myComments))
+    console.log(myPosts)
+    console.log(postsILiked)
+    console.log(myComments)
     
     let likeStatusesJson = {}
-    for (const postILiked of Object.values(postsILiked)) {
+    for (const postILiked of postsILiked) {
       likeStatusesJson[postILiked.id] = true
     }
     setLikeStatuses(likeStatusesJson)
@@ -62,7 +62,7 @@ function MyProfile() {
 
   // just printing
   useEffect(() => {
-    console.log(Object.values(likeStatuses))
+    console.log(likeStatuses)
   }, [likeStatuses])
 
   return (
@@ -71,7 +71,7 @@ function MyProfile() {
 
       <h1>Posts</h1>
       <div>
-        {Object.values(myPosts).map((value, key) => {
+        {myPosts.map((value, key) => {
           return (<div key={key}>
             <li key={key}>{JSON.stringify(value)}</li>
             <button type="button" onClick={() => {
@@ -135,6 +135,8 @@ function MyProfile() {
                   await axios.post(`http://localhost:3000/post/delete/${value.id}`)
 
                   // need to remove all posts from state, including your likes and comments to that post
+                  setMyPosts()
+
                   let newPosts = []
                   console.log(myPosts)
                   for (const post of myPosts) {
@@ -170,7 +172,7 @@ function MyProfile() {
 
       <h1>Posts You've Liked</h1>
       <div>
-        {Object.values(postsILiked).map((value, key) => {
+        {postsILiked.map((value, key) => {
           return <div key={key}>
               <li key={key}>{JSON.stringify(value)}</li>
               {likeStatuses[value.id] && 
@@ -205,7 +207,7 @@ function MyProfile() {
 
       <h1>Comments</h1>
       <div>
-        {Object.values(myComments).map((value, key) => {
+        {myComments.map((value, key) => {
           return <div key={key}>
             <li key={key}>{JSON.stringify(value)}</li>
             <button type="button" onClick={() => editPostAction(value.id, value.postTitle, value.postBody)}>Edit</button>
