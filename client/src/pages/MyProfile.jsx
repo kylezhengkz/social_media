@@ -160,7 +160,7 @@ function MyProfile() {
       <div>
         {postsILiked.map((value, key) => {
           return <div key={key}>
-              <li key={key}>{JSON.stringify(value)}</li>
+              <li>{JSON.stringify(value)}</li>
               {likeStatuses[value.id] && 
                 <button type="button" disabled={isLoading[value.postId]} onClick={async () => {
                   beginLoading(value.postId)
@@ -189,7 +189,7 @@ function MyProfile() {
       <div>
         {myComments.map((value, key) => {
           return <div key={key}>
-            <li key={key}>{JSON.stringify(value)}</li>
+            <li>{JSON.stringify(value)}</li>
             <button type="button" onClick={() => editPostAction(value.id, value.postTitle, value.postBody)}>Edit</button>
             <button type="button" onClick={() => toggleDeletePost(value.id)}>Delete</button>
            </div>
