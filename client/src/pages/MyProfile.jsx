@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
 import "./MyProfile.css"
+import useLoading from "../custom_hooks/useLoading"
 
 function MyProfile() {
 
@@ -13,6 +14,12 @@ function MyProfile() {
   const [likeStatuses, setLikeStatuses] = useState({}) // toggle like/unlike display when user unlikes/relikes a post
   const [editPost, setEditPost] = useState(-1) // if user wants to edit a post, sets to post id
   const [deletePostStatus, setDeletePostStatus] = useState(-1) // if user wants to delete a post, sets to post id
+
+  const { isLoading, beginLoading, finishLoading } = useLoading() // custom hook
+
+  useEffect(() => {
+    console.log("STATUS: " + JSON.stringify(isLoading))
+  }, [isLoading])
 
   // stores pending edits of post before submitting changes
   const pendingTitle = useRef("")
@@ -123,8 +130,10 @@ function MyProfile() {
             {deletePostStatus === value.id &&
               <div id="deletePost">
                 <p>Are you sure you want to delete post titled {value.postTitle}?</p>
-                <button onClick={async () => {
+                <button disabled={isLoading[value.id]} onClick={async () => {
+                  beginLoading(value.id) // disables button to avoid race condition where user clicks rapidly multiple times sending new requests when previous didn't finish yet
                   await axios.post(`http://localhost:3000/post/delete/${value.id}`)
+
                   // need to remove all posts from state, including your likes and comments to that post
                   let newPosts = []
                   console.log(myPosts)
@@ -149,6 +158,7 @@ function MyProfile() {
                   }
                   setMyComments(newComments)
                   toggleDeletePost(value.id)
+                  finishLoading(value.id)
                 }}>Yes</button>
                 <button onClick={() => toggleDeletePost(value.id)}>No</button>
               </div>
@@ -164,22 +174,28 @@ function MyProfile() {
           return <div key={key}>
               <li key={key}>{JSON.stringify(value)}</li>
               {likeStatuses[value.id] && 
-                <button type="button" onClick={async () => {
+                <button type="button" disabled={isLoading[value.postId]} onClick={async () => {
+                  beginLoading(value.postId)
                   await axios.post(`http://localhost:3000/post/${value.postId}/unlikePost`)
                   setLikeStatuses({
                     ...likeStatuses,
                     [value.id]: false
                   })
+                  finishLoading(value.postId)
                 }
                 }>Unlike</button>
               }
               {!likeStatuses[value.id] && 
-                <button type="button" onClick={async () => {
+                <button type="button" disabled={isLoading[value.postId]} onClick={async () => {
+                  beginLoading(value.postId)
+                  console.log(isLoading[value.postId])
                   await axios.post(`http://localhost:3000/post/${value.postId}/likePost`)
                   setLikeStatuses({
                     ...likeStatuses,
                     [value.id]: true
                   })
+                  finishLoading(value.postId)
+                  console.log(isLoading[value.postId])
                 }
                 }>Like</button>
               }
