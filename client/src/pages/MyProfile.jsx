@@ -65,6 +65,17 @@ function MyProfile() {
     console.log(likeStatuses)
   }, [likeStatuses])
 
+  // helper functions below ------------------------
+  function editPostAction(postId, postTitle, postBody) {
+    console.log(postId)
+    console.log(postTitle)
+    console.log(postBody)
+    setEditPost(postId)
+    pendingTitle.current = postTitle
+    pendingBody.current = postBody
+  }
+
+
   function toggleDeletePost(postId) {
     console.log(postId)
     if (deletePostStatus === postId) {
@@ -73,6 +84,7 @@ function MyProfile() {
       setDeletePostStatus(postId)
     }
   }
+  // helper functions above ------------------------
 
   return (
     <>
@@ -82,17 +94,8 @@ function MyProfile() {
       <div>
         {myPosts.map((value, key) => {
           return (<div key={key}>
-            <li key={key}>{JSON.stringify(value)}</li>
-            <button type="button" onClick={() => {
-              // edit post
-              console.log(value.id)
-              console.log(value.postTitle)
-              console.log(value.postBody)
-              setEditPost(value.id)
-              pendingTitle.current = value.postTitle
-              pendingBody.current = value.postBody
-            }}>Edit</button>
-
+            <li>{JSON.stringify(value)}</li>
+            <button type="button" onClick={() => editPostAction(value.id, value.postTitle, value.postBody)}>Edit</button>
             <button type="button" onClick={() => toggleDeletePost(value.id)}>Delete</button>
             
             {editPost === value.id &&
@@ -162,10 +165,7 @@ function MyProfile() {
                 <button type="button" disabled={isLoading[value.postId]} onClick={async () => {
                   beginLoading(value.postId)
                   await axios.post(`http://localhost:3000/post/${value.postId}/unlikePost`)
-                  setLikeStatuses({
-                    ...likeStatuses,
-                    [value.id]: false
-                  })
+                  setLikeStatuses(prev => ({...prev, [value.id]: false}))
                   finishLoading(value.postId)
                 }
                 }>Unlike</button>
@@ -175,10 +175,7 @@ function MyProfile() {
                   beginLoading(value.postId)
                   console.log(isLoading[value.postId])
                   await axios.post(`http://localhost:3000/post/${value.postId}/likePost`)
-                  setLikeStatuses({
-                    ...likeStatuses,
-                    [value.id]: true
-                  })
+                  setLikeStatuses(prev => ({...prev, [value.id]: true}))
                   finishLoading(value.postId)
                   console.log(isLoading[value.postId])
                 }
