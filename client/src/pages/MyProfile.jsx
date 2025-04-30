@@ -65,6 +65,15 @@ function MyProfile() {
     console.log(likeStatuses)
   }, [likeStatuses])
 
+  function toggleDeletePost(postId) {
+    console.log(postId)
+    if (deletePostStatus === postId) {
+      setDeletePostStatus(-1)
+    } else {
+      setDeletePostStatus(postId)
+    }
+  }
+
   return (
     <>
       <h1>My Profile</h1>
@@ -84,14 +93,7 @@ function MyProfile() {
               pendingBody.current = value.postBody
             }}>Edit</button>
 
-            <button type="button" onClick={() => {
-              console.log(value.id)
-              if (deletePostStatus === value.id) {
-                setDeletePostStatus(-1)
-              } else {
-                setDeletePostStatus(value.id)
-              }
-            }}>Delete</button>
+            <button type="button" onClick={() => toggleDeletePost(value.id)}>Delete</button>
             
             {editPost === value.id &&
               <div id="editPost">
@@ -139,7 +141,7 @@ function MyProfile() {
                   console.log(myPosts)
                   setMyPosts(prev => prev.filter(post => post.id !== value.id))
                   setPostsILiked(prev => prev.filter(likedPost => likedPost.postId !== value.id))
-                  setMyComments(prev => prev.filter(comment => postId.id !== value.id))
+                  setMyComments(prev => prev.filter(comment => comment.postId !== value.id))
                   toggleDeletePost(value.id)
                   finishLoading(value.id)
                 }}>Yes</button>
