@@ -13,6 +13,8 @@ import SearchUser from "./pages/SearchUser"
 import { useState, useEffect } from "react"
 import axios from "axios"
 
+import PostFeed from "./pages/PostFeed"
+
 function App() {
   const [isAuth, setAuth] = useState(false)
   useEffect(() => {
@@ -33,7 +35,7 @@ function App() {
         <div className="link-container">
           <Link to="/">Landing Page</Link>
           <Link to="/home">Home</Link>
-          <Link to="/home/browse">Browse</Link>
+          <Link to="/home/postFeed">PostFeed</Link>
           <Link to="/auth/register">Register</Link>
           <Link to="/auth/login">Login</Link>
           {isAuth && <Link to="/auth/logout">Logout</Link>}
@@ -49,7 +51,7 @@ function App() {
           <Route path="/auth/logout" element={<Logout setAuth={setAuth}/>}/>
           <Route path="/auth/directLogin" element={<DirectLogin/>}/>
           <Route path="/post/createPost" element={<CreatePost/>}/>
-          <Route path="/home/browse" element={<Browse/>}/>
+          <Route path="/home/postFeed" element={<PostFeed/>}/>
           <Route path="/home/browse/:username" element={<Browse/>}/>
           <Route path="/myProfile" element={<MyProfile/>}/>
           <Route path="/searchUser" element={<SearchUser/>}/>

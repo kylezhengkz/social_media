@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
 import "./MyProfile.css"
-import useLoading from "../custom_hooks/useLoading"
+import UseLoading from "../custom_hooks/UseLoading"
 
 function MyProfile() {
 
@@ -15,7 +15,7 @@ function MyProfile() {
   const [editPost, setEditPost] = useState(-1) // if user wants to edit a post, sets to post id
   const [deletePostStatus, setDeletePostStatus] = useState(-1) // if user wants to delete a post, sets to post id
 
-  const { isLoading, beginLoading, finishLoading } = useLoading() // custom hook
+  const { isLoading, beginLoading, finishLoading } = UseLoading() // custom hook
 
   useEffect(() => {
     console.log("STATUS: " + JSON.stringify(isLoading))

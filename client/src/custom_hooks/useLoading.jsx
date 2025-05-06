@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-export default function useLoading() {
+export default function UseLoading() {
   const [isLoading, setLoading] = useState({})
   
   const beginLoading = (id) => {
