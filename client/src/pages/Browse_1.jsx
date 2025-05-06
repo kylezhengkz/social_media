@@ -31,24 +31,17 @@ function Browse() {
       let checkAuth = await axios.get("http://localhost:3000/auth/checkAuth")
 
       if (checkAuth.data.isAuth) {
+        let res
         if (userPosts) {
-          await axios.get(`http://localhost:3000/profile/viewUserPosts/${userPosts["username"]}`).then((res) => {
-            setListOfPosts(res.data)
-          })
+          res = await axios.get(`http://localhost:3000/profile/viewUserPosts/${userPosts["username"]}`)
         } else if (userLikedPosts) {
-          await axios.get(`http://localhost:3000/profile/viewUserLikedPosts/${userLikedPosts["username"]}`).then((res) => {
-            console.log(res.data)
-            setListOfPosts(res.data)
-          })
+          res = await axios.get(`http://localhost:3000/profile/viewUserLikedPosts/${userLikedPosts["username"]}`)
         } else if (userComments) {
-          await axios.get(`http://localhost:3000/profile/viewUserCommentedPosts/${userComments["username"]}`).then((res) => {
-            setListOfPosts(res.data)
-          })
+          res = await axios.get(`http://localhost:3000/profile/viewUserCommentedPosts/${userComments["username"]}`)
         } else {
-          await axios.get("http://localhost:3000/home/browse").then((res) => {
-            setListOfPosts(res.data)
-          })
+          res = await axios.get("http://localhost:3000/home/browse")
         }
+        setListOfPosts(res.data)
       } else {
         console.log("User not authenticated");
         navigate('/auth/directLogin', { state: { pageName: '/home/browse' } })
