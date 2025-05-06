@@ -1,28 +1,41 @@
-import { memo, useEffect } from 'react'
+import { memo, useEffect, useState } from 'react'
 import "./PostLikeSection.css"
-import axios from "axios"
 import UseLoading from "../custom_hooks/UseLoading"
+import { api } from '../api/api.js'
 
 function PostLikeSection({ postId }) {
+  const[likes, setLikes] = useState([])
+  const[toggleLike, setToggleLike] = useState(false)
 
   useEffect(() => {
     async function fetchLikes() {
-      await axios.get(`http://localhost:3000/profile/viewUserPosts/${userPosts["username"]}`)
+      let res = await api.get(`/post/${postId}/getLikes`)
+      console.log(res.data)
+      setLikes(res.data)
     }
+    fetchLikes()
   }, [])
+
+  useEffect(() => {
+    console.log(likes)
+  }, [likes])
   
   function likePost() {
-    
+    if (toggleLike) {
+      setToggleLike(false)
+    } else {
+      setToggleLike(true)
+    }
   }
 
   console.log("Post Id printed @ PostLikeSection: " + postId)
   return (
-    <>
-      <div className="my_border">
-        <p>{postId}</p>
-        <button onClick={() => likePost()}>Like</button>
-      </div>
-    </>
+    <div className="my_border">
+      {likes.length === 0 && <p> No likes </p>}
+      {likes.length > 0 && <p>{likes.length} Likes</p>}
+      {!toggleLike && <button onClick={() => likePost()}>Like post</button>}
+      {toggleLike && <button onClick={() => likePost()}>Unlike post</button>}
+    </div>
   )
 }
 
