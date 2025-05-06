@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from 'react'
 import "./PostLikeSection.css"
-import UseLoading from "../custom_hooks/UseLoading"
+import useLoading from "../custom_hooks/useLoading"
 import { api } from '../api/api.js'
 
 function PostLikeSection({ postId }) {
